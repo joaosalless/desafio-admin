@@ -168,6 +168,7 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
+        Spatie\Activitylog\ActivitylogServiceProvider::class,
 
         /*
          * Application Service Providers...
