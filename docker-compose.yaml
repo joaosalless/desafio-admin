@@ -1,0 +1,36 @@
+######
+# v2 syntax
+version: '2'
+
+# Named volumes
+volumes:
+  # MySQL Data
+  desafiomemed-mysql-data:
+    driver: local
+
+services:
+
+  # MySQL (5.7)
+  mysql:
+    image: ambientum/mysql:5.7
+    container_name: desafiomemed-mysql
+    volumes:
+      - desafiomemed-mysql-data:/var/lib/mysql
+    ports:
+      - "33060:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=desafiomemed
+      - MYSQL_USER=desafiomemed
+      - MYSQL_PASSWORD=desafiomemed
+
+  # PHP (with Nginx)
+  app:
+    image: ambientum/php:7.1-nginx
+    container_name: desafiomemed-app
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "80:8080"
+    links:
+      - mysql
