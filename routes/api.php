@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,40 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')
+    ->as('user')
+    ->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group([
+    'as'        => 'admin.',
+    'prefix'    => 'admin',
+    'namespace' => 'Admin',
+], function () {
+
+    Route::get('/', ['as' => 'index', 'uses' => "DashboardController@index"]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Medicamentos Api Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/medicamentos/trashed', ['as' => 'medicamentos.trashed', 'uses' => "MedicamentosController@getTrashed"]);
+
+    Route::resource('medicamentos', 'MedicamentosController', [
+        'only'       => [
+            'index',
+            //'store',
+            'show',
+            'update',
+            //'destroy',
+        ],
+        'parameters' => [
+            'medicamentos' => 'id',
+        ]
+    ]);
+
+});
+
+Route::get('/', ['as' => 'index', 'uses' => "Admin\DashboardController@index"]);
