@@ -1,0 +1,13 @@
+{
+    "APP_NAME": "SPA - Desafio do Admin",
+    "DEFAULT_TITLE": "",
+    "DEFAULT_META_DESCRIPTION": "",
+    "PUBLIC.HOME.PAGE_TITLE": "",
+    "PUBLIC.HOME.META_DESCRIPTION": "",
+    "PUBLIC.ABOUT.PAGE_TITLE": "",
+    "PUBLIC.ABOUT.META_DESCRIPTION": "",
+    "PUBLIC.ABOUT_US.PAGE_TITLE": "",
+    "PUBLIC.ABOUT_US.META_DESCRIPTION": "",
+
+    "API.GET.ERROR": "Erro ao requisitar dados da API: {{ err }}"
+}
