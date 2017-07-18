@@ -24,7 +24,12 @@ class MedicamentoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table($this->model->getTable())->insert($this->getDataArray());
+        foreach ($this->getDataArray() as $medicamento) {
+            DB::table($this->model->getTable())->insert($medicamento);
+            activity()
+                ->performedOn(Medicamento::find($medicamento['id']))
+                ->log('created');
+        }
     }
 
     public function getDataArray(): array

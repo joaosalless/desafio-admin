@@ -36,7 +36,7 @@ class HistoricoTransformer extends TransformerAbstract
             'id'          => $model->id,
             'description' => $model->description,
             'created_at'  => $model->created_at->toDateTimeString(),
-            'properties'  => $model->changes,
+            'properties'  => $this->getProperties($model),
         ];
     }
 
@@ -45,5 +45,14 @@ class HistoricoTransformer extends TransformerAbstract
         return $model->causer
             ? $this->item($model->causer, new ActivityCauserTransformer())
             : null;
+    }
+
+    public function getProperties(Activity $model)
+    {
+        return isset($model->changes['attributes']) ? collect([
+            'modified'   => array_keys($model->changes['attributes']),
+            'old'        => isset($model->changes['old'])        ? $model->changes['old'] : [],
+            'attributes' => isset($model->changes['attributes']) ? $model->changes['attributes'] : [],
+        ]) : [];
     }
 }

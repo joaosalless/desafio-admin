@@ -1,7 +1,15 @@
 import { AbstractEntity } from './abstract-entity.model';
+import { LoggableEntityInterface } from './loggable-entity-interface';
 import { SearchableEntityInterface } from './searchable-entity-interface';
 
-export abstract class SearchableEntity extends AbstractEntity implements SearchableEntityInterface {
+export abstract class SearchableEntity extends AbstractEntity implements SearchableEntityInterface, LoggableEntityInterface {
+
+  /**
+   * history attribute
+   *
+   * @type {any}
+   */
+  history?: any;
 
   /**
    * Especifica os campos editaveis da Entidade
@@ -43,6 +51,17 @@ export abstract class SearchableEntity extends AbstractEntity implements Searcha
 
   resetDataCollection() {
     throw new Error("Method not implemented.");
+  }
+
+  /**
+   * Retorna o Histórico de alterações
+   *
+   * Só consta no resultado de uma consulta quando é solicitado via fractals transformer.
+   *
+   * @type {any}
+   */
+  getHistory(): any {
+    return this.history;
   }
 
   /**

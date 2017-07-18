@@ -22,7 +22,14 @@
     "SAVE": "Salvar",
     "DELETE": "Deletar",
     "SHOW": "Visualizar",
-    "SHOW_HISTORY": "Ver Histórico"
+    "SHOW_HISTORY": "Ver Histórico",
+    "HIDE_HISTORY": "Ocultar Histórico"
+  },
+  "HISTORY": {
+    "CREATED": "criou",
+    "UPDATED": "modificou",
+    "DELETED": "deletou",
+    "RESTORED": "restaurou"
   },
   "DOMAINS": {
     "ACTIVE_PLURAL": "Ativos",

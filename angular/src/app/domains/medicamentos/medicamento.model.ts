@@ -49,7 +49,7 @@ export class Medicamento extends SearchableEntity {
   /**
    * history attribute
    *
-   * Array de dados com o histórico de alterações.
+   * Histórico de alterações.
    * Só consta no resultado de uma consulta quando é solicitado via fractals transformer.
    *
    * @type {{data: Historico}}

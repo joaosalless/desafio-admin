@@ -19,6 +19,9 @@ import { SearchableEntity } from '../../../domains/abstract/searchable-entity';
 import { PreloaderService } from '../../components/preloader/preloader.service';
 import { MedicamentoSearchFilterService } from '../../../units/medicamentos/medicamento-list/medicamento-search-filter.service';
 import { NotificationService } from '../../components/notification/notification.service';
+import { SearchableEntityInterface } from '../../../domains/abstract/searchable-entity-interface';
+import { LoggableEntityInterface } from '../../../domains/abstract/loggable-entity-interface';
+import { Activity } from '../../../domains/activities/activity.model';
 
 @Injectable()
 export class DataService {
@@ -55,7 +58,7 @@ export class DataService {
               public searchFilter: MedicamentoSearchFilterService,
               public preloaderService: PreloaderService,
               public logger: LoggerService,
-              public notificationService:  NotificationService,
+              public notificationService: NotificationService,
               public metaService: MetaService,
               protected httpService: HttpService,
               protected route: ActivatedRoute,
@@ -71,7 +74,7 @@ export class DataService {
    * @param key
    * @return {any}
    */
-  getData(key) {
+  getData(key: any): any {
     return this.data[key];
   }
 
@@ -224,7 +227,7 @@ export class DataService {
    *
    * @return {string}
    */
-  getEndPoint() {
+  getEndPoint(): any {
     return this.data.endpoint;
   }
 
@@ -288,6 +291,7 @@ export class DataService {
    */
   getCollection() {
     this.resetDataCollection();
+    this.prepareCollectionQuery();
     this.setSearchParams();
     this.httpService
       .init(this.getCollectionQueryBuilder())
@@ -324,6 +328,7 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .post(this.getData(this.data.endpoint).item.data)
       .then((res) => {
+        this.getCollection();
         Object.assign(this.getData(this.data.endpoint).item, res);
         this.debug();
       })
@@ -342,6 +347,7 @@ export class DataService {
       .update(id, item)
       .then((res) => {
         this.resetDataItem();
+        this.getCollection();
         Object.assign(this.getData(this.data.endpoint).item, res);
         this.debug();
       })
@@ -359,6 +365,7 @@ export class DataService {
       .remove(id)
       .then((res) => {
         this.resetDataItem();
+        this.getCollection();
         this.notificationService.showSuccess(res.message);
         this.debug();
       })
@@ -376,6 +383,7 @@ export class DataService {
       .restore(id)
       .then((res) => {
         this.getItem(id);
+        this.getCollection();
         this.notificationService.showSuccess(res.message);
         this.debug();
       })
@@ -393,6 +401,7 @@ export class DataService {
       .forceRemove(id)
       .then((res) => {
         this.resetDataItem();
+        this.getCollection();
         this.notificationService.showError(res.message);
         this.debug();
       })

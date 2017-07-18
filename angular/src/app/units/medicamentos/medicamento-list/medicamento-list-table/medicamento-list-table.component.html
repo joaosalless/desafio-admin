@@ -13,7 +13,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let medicamento of data.medicamentos.collection.data">
+  <tr *ngFor="let medicamento of collection.data">
     <td>{{ medicamento.nome }}</td>
     <td>{{ medicamento.ggrem }}</td>
     <td>{{ medicamento.created_at | date: 'dd/MM/y HH:mm:ss' }}</td>

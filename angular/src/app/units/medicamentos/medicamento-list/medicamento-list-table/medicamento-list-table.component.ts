@@ -13,8 +13,6 @@ export class MedicamentoListTableComponent implements OnInit {
 
   @Input() collection: any;
 
-  data: any;
-
   constructor(protected readonly configService: ConfigService,
               protected readonly translate: TranslateService,
               public dataService: DataService,
@@ -22,27 +20,23 @@ export class MedicamentoListTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.data = this.dataService.data;
+
   }
 
   saveItem() {
     this.dataService.saveItem();
-    this.dataService.getCollection();
   }
 
   removeItem(id: any) {
     this.dataService.removeItem(id);
-    this.dataService.getCollection();
   }
 
   forceRemoveItem(id: any) {
     this.dataService.forceRemoveItem(id);
-    this.dataService.getCollection();
   }
 
   restoreItem(id: any) {
     this.dataService.restoreItem(id);
-    this.dataService.getCollection();
   }
 
 }

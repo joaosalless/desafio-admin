@@ -28,7 +28,7 @@
         <a href="#active" aria-controls="active" role="tab" data-toggle="tab"
            (click)="dataService.toggleTrashed(false)">
           {{ 'DOMAINS.ACTIVE_PLURAL' | translate }}
-          <span *ngIf="dataService.showCountActive()">
+          <span *ngIf="!dataService.searchFilter.onlyTrashed">
             <span *ngIf="!preloaderService.getPendingRequests()">
               ({{ data.medicamentos.collection.data.length }})
             </span>
@@ -39,7 +39,7 @@
         <a href="#trashed" aria-controls="trashed" role="tab" data-toggle="tab"
            (click)="dataService.toggleTrashed(true)">
           {{ 'DOMAINS.TRASHED_PLURAL' | translate }}
-          <span *ngIf="!dataService.showCountActive()">
+          <span *ngIf="dataService.searchFilter.onlyTrashed">
             <span *ngIf="!preloaderService.getPendingRequests()">
               ({{ data.medicamentos.collection.data.length }})
             </span>

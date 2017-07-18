@@ -39,19 +39,26 @@ export class MedicamentoEditComponent implements OnInit {
     this.route.params
       .subscribe((params: any) => {
         this.dataService.getItem(params.id);
-        window.scrollTo(0, 0);
-        this.dataService.debug();
       });
+    window.scrollTo(0, 0);
     this.dataService.debug();
   }
 
-  updateItem() {
+  cancel() {
+    this.router.navigate(['/medicamentos']);
+  }
+
+  save() {
     let item = this.data.medicamentos.item.data;
     let entity = this.data.medicamentos.item.entity;
     this.dataService.updateItem(item.id, {
       nome: item.nome,
       ggeem: item.ggeem,
     });
+  }
+
+  toggleShowhowHistory() {
+    this.data.medicamentos.item.showHistory = (this.data.medicamentos.item.showHistory !== true);
   }
 
 }

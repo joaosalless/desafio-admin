@@ -1,3 +1,28 @@
-<p>
-  medicamento-history works!
-</p>
+<table class="table">
+  <tbody>
+    <tr *ngFor="let history of item.history.data">
+      <td>
+        <p class="no-margin">
+          <span class="text-muted">{{ history.causer.data.username }}</span>
+          <span [ngClass]="{
+            'text-danger': history.description === 'deleted',
+            'text-warning': history.description === 'updated',
+            'text-success': history.description === 'created' || history.description === 'restored'
+          }">
+            {{ 'history.' + history.description | uppercase | translate }}
+          </span>
+
+          <span *ngFor="let property of history.properties.modified">
+            <strong>{{ property }}</strong>
+            <span class="text-muted">de</span>
+            {{ history.properties.attributes[property] }}
+            <span class="text-muted">para</span>
+            {{ history.properties.attributes[property] }},
+          </span>
+
+          <span class="text-muted">em {{ history.created_at | date: 'dd/MM/y HH:mm:ss' }}</span>
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -260,9 +260,14 @@ abstract class Controller extends BaseController
             $restored = $entity->restore();
 
             if ($restored) {
+
+                activity()
+                    ->performedOn($entity)
+                    ->log('restored');
+
                 $response = $this->setResponseData([
                     'success' => true,
-                    'message' => 'Registro excluido permanentemente',
+                    'message' => 'Registro restaurado com sucesso',
                 ]);
             } else {
                 $response = $this->setResponseData([
