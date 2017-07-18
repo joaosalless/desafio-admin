@@ -1,0 +1,27 @@
+@import "../../../../sass/variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+
+$primary-color: $brand-primary !default;
+$ball-size: 10px !default;
+$margin: 2px !default;
+$line-height: 35px !default;
+$line-width: 4px !default;
+
+@import "../../../../../node_modules/loaders.css/src/loaders";
+
+.preloader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.75);
+  z-index: 9999;
+
+  .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 0 0 0;
+  }
+}

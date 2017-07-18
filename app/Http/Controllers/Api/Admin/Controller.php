@@ -32,36 +32,11 @@ abstract class Controller extends BaseController
      */
     public function index()
     {
-        $medicamentos = $this->repository->with($this->getRelations('collection'))->all();
-
-        if (count($medicamentos['data']) > 0) {
-            $response = $this->setResponseData([
-                'success' => true,
-                'status'  => HttpResponseCodes::HTTP_OK,
-                'data'    => $medicamentos,
-            ]);
-        } else {
-            $response = $this->setResponseData([
-                'success' => false,
-                'status'  => HttpResponseCodes::HTTP_NOT_FOUND,
-                'message' => 'Nenhum registro encontrado',
-                'data'    => [],
-            ]);
+        if (request()->onlyTrashed && request()->onlyTrashed === 'true') {
+            $this->repository->pushCriteria(app(OnlyTrashedCriteria::class));
         }
 
-        return $this->response($response);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getTrashed()
-    {
-        $this->repository->pushCriteria(app(OnlyTrashedCriteria::class));
-
-        $medicamentos = $this->repository->with($this->getRelations('collection'))->all();
+        $medicamentos = $this->repository->with($this->getRelations('collection'))->paginate();
 
         if (count($medicamentos['data']) > 0) {
             $response = $this->setResponseData([
@@ -72,7 +47,7 @@ abstract class Controller extends BaseController
         } else {
             $response = $this->setResponseData([
                 'success' => false,
-                'status'  => HttpResponseCodes::HTTP_NOT_FOUND,
+                'status'  => HttpResponseCodes::HTTP_OK,
                 'message' => 'Nenhum registro encontrado',
                 'data'    => [],
             ]);
@@ -90,7 +65,8 @@ abstract class Controller extends BaseController
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $data = $this->makeData($request->all());
+
         $validator = $this->repository->validate($data, $this->repository->rulesCreating());
 
         if ($validator->fails()) {
@@ -171,7 +147,8 @@ abstract class Controller extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
+        $data = $this->makeData($request->all());
+
         $validator = $this->repository->validate($data, $this->repository->rulesUpdating());
 
         if ($validator->fails()) {
@@ -264,6 +241,100 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Remove permanently the specified resource from storage.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        try {
+
+            $this->repository->skipPresenter();
+
+            $this->repository->pushCriteria(app(OnlyTrashedCriteria::class));
+
+            $entity = $this->repository->find($id);
+
+            $restored = $entity->restore();
+
+            if ($restored) {
+                $response = $this->setResponseData([
+                    'success' => true,
+                    'message' => 'Registro excluido permanentemente',
+                ]);
+            } else {
+                $response = $this->setResponseData([
+                    'success' => false,
+                    'status'  => HttpResponseCodes::HTTP_BAD_REQUEST,
+                    'message' => 'Houve um problema ao excluir o registro.',
+                ]);
+            }
+
+            return $this->response($response);
+
+        } catch (ModelNotFoundException $e) {
+
+            $response = $this->setResponseData([
+                'success' => false,
+                'status'  => HttpResponseCodes::HTTP_NOT_FOUND,
+                'message' => 'Registro não encontrado.',
+            ]);
+
+            return $this->response($response);
+        }
+
+    }
+
+    /**
+     * Remove permanently the specified resource from storage.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function forceDelete($id)
+    {
+        try {
+
+            $this->repository->skipPresenter();
+
+            $this->repository->pushCriteria(app(OnlyTrashedCriteria::class));
+
+            $entity = $this->repository->find($id);
+
+            $deleted = $entity->forceDelete();
+
+            if ($deleted) {
+                $response = $this->setResponseData([
+                    'success' => true,
+                    'message' => 'Registro excluido permanentemente',
+                ]);
+            } else {
+                $response = $this->setResponseData([
+                    'success' => false,
+                    'status'  => HttpResponseCodes::HTTP_BAD_REQUEST,
+                    'message' => 'Houve um problema ao excluir o registro.',
+                ]);
+            }
+
+            return $this->response($response);
+
+        } catch (ModelNotFoundException $e) {
+
+            $response = $this->setResponseData([
+                'success' => false,
+                'status'  => HttpResponseCodes::HTTP_NOT_FOUND,
+                'message' => 'Registro não encontrado.',
+            ]);
+
+            return $this->response($response);
+        }
+
+    }
+
+    /**
      * Set Response Data
      *
      * @param $data
@@ -305,6 +376,20 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Trata os dados recebidos no request
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function makeData(array $data)
+    {
+        return $data;
+    }
+
+    /**
+     * Retorna uma resposta da API
+     *
      * @param array $response
      *
      * @return mixed

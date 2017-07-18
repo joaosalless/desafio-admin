@@ -1,0 +1,52 @@
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th>{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}</th>
+    <th>{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</th>
+    <th>{{ 'DOMAINS.CREATED_AT' | translate }}</th>
+    <th>{{ 'DOMAINS.UPDATED_AT' | translate }}</th>
+    <th *ngIf="!dataService.showCountActive()">
+      {{ 'DOMAINS.DELETED_AT' | translate }}
+    </th>
+    <th class="th-for-btn"></th>
+    <th class="th-for-btn"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let medicamento of data.medicamentos.collection.data">
+    <td>{{ medicamento.nome }}</td>
+    <td>{{ medicamento.ggrem }}</td>
+    <td>{{ medicamento.created_at | date: 'dd/MM/y HH:mm:ss' }}</td>
+    <td>{{ medicamento.updated_at | date: 'dd/MM/y HH:mm:ss' }}</td>
+    <td *ngIf="medicamento.deleted_at !== null">
+      {{ medicamento.deleted_at | date: 'dd/MM/y HH:mm:ss' }}
+    </td>
+    <td class="td-for-btn">
+      <a [routerLink]="['/medicamentos', medicamento.id]" class="btn btn-sm btn-link">
+        <i class="fa fa-edit"></i>
+      </a>
+    </td>
+    <td class="td-for-btn" *ngIf="medicamento.deleted_at === null">
+      <button (click)="removeItem(medicamento.id)"
+              title="Deletar"
+              class="btn btn-sm btn-link">
+        <i class="fa fa-times text-danger"></i>
+      </button>
+    </td>
+    <td class="td-for-btn" *ngIf="medicamento.deleted_at !== null">
+      <button (click)="restoreItem(medicamento.id)"
+              title="Restaurar"
+              class="btn btn-sm btn-link">
+        <i class="fa fa-recycle text-success"></i>
+      </button>
+    </td>
+    <td class="td-for-btn" *ngIf="medicamento.deleted_at !== null">
+      <button (click)="forceRemoveItem(medicamento.id)"
+              title="Deletar permanentemente"
+              class="btn btn-sm btn-link">
+        <i class="fa fa-times text-danger"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

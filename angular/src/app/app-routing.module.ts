@@ -4,8 +4,19 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    children: []
-  }
+    children: [
+      {
+        path: 'medicamentos',
+        loadChildren: 'app/units/medicamentos/medicamentos.module#MedicamentosModule'
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'medicamentos'
+      },
+    ]
+  },
+  { path: '**', redirectTo: 'not-found' },
 ];
 
 @NgModule({

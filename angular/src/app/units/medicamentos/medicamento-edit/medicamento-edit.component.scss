@@ -1,0 +1,16 @@
+@import "../../../../sass/variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+
+.header-row {
+  margin: 30px 0 0 0;
+  .title {
+    margin: 0;
+  }
+}
+
+.content-row {
+  .tab-content {
+    margin: 20px 0;
+  }
+
+}

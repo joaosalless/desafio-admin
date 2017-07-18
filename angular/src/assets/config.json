@@ -1,56 +1,59 @@
 {
-    "system": {
-        "app": {
-            "id": "desafio-admin",
-            "name": "APP_NAME",
-            "url": "http://localhost:8000"
-        },
-        "api": {
-            "version": "v1",
-            "url": "http://localhost:8000/api"
-        },
-        "debug": {
-            "enabled": true,
-            "logOnConsole": true,
-            "logOnServer": false,
-            "serverLogUrl": "http://localhost/api/log-receiver",
-            "serverLogLevel": "DEBUG"
-        }
+  "system": {
+    "app": {
+      "id": "desafio-admin",
+      "name": "Desafio do Admin - Memed",
+      "url": "http://localhost:8000",
+      "search": {
+        "updateUrl": true
+      }
     },
-    "developer": {
-        "name": "João Sales",
-        "site": "",
-        "github": "https://github.com/joaosalless"
+    "api": {
+      "version": "v1",
+      "url": "http://localhost:8000/api/admin"
     },
-    "seo": {
-        "defaultPageTitle": "DEFAULT_TITLE",
-        "pageTitlePositioning": 10,
-        "pageTitleSeparator": " | ",
-        "defaultMetaDescription": "DEFAULT_META_DESCRIPTION"
-    },
-    "i18n": {
-        "defaultLanguage": {
-            "code": "pt",
-            "name": "Portuguese",
-            "culture": "pt-BR"
-        },
-        "availableLanguages": [
-            {
-                "code": "pt",
-                "name": "Portuguese",
-                "culture": "pt-BR"
-            }
-        ]
-    },
-    "theme": {
-        "default": {
-            "colors": {
-                "primary": "#428bca",
-                "success": "#5cb85c",
-                "info": "#5bc0de",
-                "warning": "#f0ad4e",
-                "danger": "#d9534f"
-            }
-        }
+    "debug": {
+      "enabled": true,
+      "logOnConsole": true,
+      "logOnServer": false,
+      "serverLogUrl": null,
+      "serverLogLevel": "DEBUG"
     }
+  },
+  "developer": {
+    "name": "João Sales",
+    "site": "",
+    "github": "https://github.com/joaosalless"
+  },
+  "seo": {
+    "defaultPageTitle": "DEFAULT_TITLE",
+    "pageTitlePositioning": 10,
+    "pageTitleSeparator": " | ",
+    "defaultMetaDescription": "DEFAULT_META_DESCRIPTION"
+  },
+  "i18n": {
+    "defaultLanguage": {
+      "code": "pt",
+      "name": "Portuguese",
+      "culture": "pt-BR"
+    },
+    "availableLanguages": [
+      {
+        "code": "pt",
+        "name": "Portuguese",
+        "culture": "pt-BR"
+      }
+    ]
+  },
+  "theme": {
+    "default": {
+      "colors": {
+        "primary": "#428bca",
+        "success": "#5cb85c",
+        "info": "#5bc0de",
+        "warning": "#f0ad4e",
+        "danger": "#d9534f"
+      }
+    }
+  }
 }

@@ -15,6 +15,16 @@ use App\Repositories\MedicamentoRepository;
 class MedicamentoRepositoryEloquent extends AbstractRepositoryEloquent implements MedicamentoRepository
 {
     /**
+     * Campos pesquisáveis
+     *
+     * @var array
+     */
+    protected $fieldSearchable = [
+        'ggrem' => 'like',
+        'nome'  => 'like',
+    ];
+
+    /**
      * Specify Model Create rules
      *
      * @return array

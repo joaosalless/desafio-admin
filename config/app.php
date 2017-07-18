@@ -167,6 +167,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Spatie\Activitylog\ActivitylogServiceProvider::class,
 

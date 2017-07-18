@@ -1,0 +1,18 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
+  <div class="form-group">
+    <label for="nome">{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}</label>
+    <input type="text"
+           class="form-control"
+           name="nome"
+           [(ngModel)]="data.medicamentos.item.data.nome"
+           placeholder="{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}">
+  </div>
+  <div class="form-group">
+    <label for="ggrem">{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</label>
+    <input type="text"
+           class="form-control"
+           name="ggrem"
+           [(ngModel)]="data.medicamentos.item.data.ggrem"
+           placeholder="{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}">
+  </div>
+</form>

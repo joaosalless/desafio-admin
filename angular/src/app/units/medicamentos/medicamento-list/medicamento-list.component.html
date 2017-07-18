@@ -1,0 +1,70 @@
+<preloader></preloader>
+<notification></notification>
+<div class="row header-row">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
+    <div class="col-xs-12 col-lg-6">
+      <h2 class="title">Apresentações Alopáticos</h2>
+    </div>
+    <div class="col-xs-9 col-lg-4">
+      <input type="text"
+             [(ngModel)]="dataService.searchFilter.search"
+             (keyup)="dataService.onFilterChange($event)"
+             name="search"
+             class="form-control"
+             placeholder="Pesquisar...">
+    </div>
+    <div class="col-xs-3 col-lg-2 no-padding">
+      <button class="btn btn-primary btn-block pull-right">Cadastrar</button>
+    </div>
+  </form>
+</div>
+
+<div class="row collection-row">
+  <div class="col-md-12">
+    <hr>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#active" aria-controls="active" role="tab" data-toggle="tab"
+           (click)="dataService.toggleTrashed(false)">
+          {{ 'DOMAINS.ACTIVE_PLURAL' | translate }}
+          <span *ngIf="dataService.showCountActive()">
+            <span *ngIf="!preloaderService.getPendingRequests()">
+              ({{ data.medicamentos.collection.data.length }})
+            </span>
+          </span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#trashed" aria-controls="trashed" role="tab" data-toggle="tab"
+           (click)="dataService.toggleTrashed(true)">
+          {{ 'DOMAINS.TRASHED_PLURAL' | translate }}
+          <span *ngIf="!dataService.showCountActive()">
+            <span *ngIf="!preloaderService.getPendingRequests()">
+              ({{ data.medicamentos.collection.data.length }})
+            </span>
+          </span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content animated fadeIn" *ngIf="!preloaderService.getPendingRequests()">
+
+      <app-medicamento-list-table [collection]="data.medicamentos.collection"
+                                  *ngIf="data.medicamentos.collection.meta?.pagination.total > 0">
+      </app-medicamento-list-table>
+
+      <app-pagination class="text-center"
+                      *ngIf="data.medicamentos.collection.length>0"
+                      [totalRegistros]="totalRegistros"
+                      [qtdPorPagina]="qtdPorPagina"
+                      (onPaginate)="paginar($event)">
+      </app-pagination>
+      <p *ngIf="data.medicamentos.collection.data.length==0" class="text-center">
+        <i>Nenhum registro encontrado.</i>
+      </p>
+
+    </div>
+  </div>
+</div>
+

@@ -1,13 +1,40 @@
 {
-    "APP_NAME": "SPA - Desafio do Admin",
-    "DEFAULT_TITLE": "",
-    "DEFAULT_META_DESCRIPTION": "",
-    "PUBLIC.HOME.PAGE_TITLE": "",
-    "PUBLIC.HOME.META_DESCRIPTION": "",
-    "PUBLIC.ABOUT.PAGE_TITLE": "",
-    "PUBLIC.ABOUT.META_DESCRIPTION": "",
-    "PUBLIC.ABOUT_US.PAGE_TITLE": "",
-    "PUBLIC.ABOUT_US.META_DESCRIPTION": "",
-
-    "API.GET.ERROR": "Erro ao requisitar dados da API: {{ err }}"
+  "APP_NAME": "SPA - Desafio do Admin",
+  "DEFAULT_TITLE": "",
+  "DEFAULT_META_DESCRIPTION": "",
+  "PUBLIC.HOME.PAGE_TITLE": "",
+  "PUBLIC.HOME.META_DESCRIPTION": "",
+  "PUBLIC.ABOUT.PAGE_TITLE": "",
+  "PUBLIC.ABOUT.META_DESCRIPTION": "",
+  "PUBLIC.ABOUT_US.PAGE_TITLE": "",
+  "PUBLIC.ABOUT_US.META_DESCRIPTION": "",
+  "NOT_IMPLEMENTED_YET": "Ainda não implementado",
+  "API": {
+    "GET": {
+      "ERROR": "Erro ao requisitar dados da API"
+    },
+    "POST": {
+      "ERROR": "Erro ao salvar os dados na API"
+    }
+  },
+  "ACTIONS": {
+    "CANCEL": "Cancelar",
+    "SAVE": "Salvar",
+    "DELETE": "Deletar",
+    "SHOW": "Visualizar",
+    "SHOW_HISTORY": "Ver Histórico"
+  },
+  "DOMAINS": {
+    "ACTIVE_PLURAL": "Ativos",
+    "ACTIVE_SINGULAR": "Ativos",
+    "TRASHED_PLURAL": "Deletados",
+    "TRASHED_SINGULAR": "Deletados",
+    "CREATED_AT": "Cadastrado em",
+    "UPDATED_AT": "Atualizado em",
+    "DELETED_AT": "Deletado em",
+    "MEDICAMENTO": {
+      "NOME": "Nome",
+      "GGREM": "GGREM"
+    }
+  }
 }
