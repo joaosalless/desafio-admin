@@ -23,10 +23,6 @@ export class MedicamentoListTableComponent implements OnInit {
 
   }
 
-  saveItem() {
-    this.dataService.saveItem();
-  }
-
   removeItem(id: any) {
     this.dataService.removeItem(id);
   }

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DataService } from '../../../shared/services/data/data.service';
 
 @Component({
   selector: 'app-medicamento-form',
@@ -7,9 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class MedicamentoFormComponent implements OnInit {
 
-  @Input() data: any;
+  @Input() item: any;
 
-  constructor() { }
+  constructor(public dataService: DataService) { }
 
   ngOnInit() {
   }

@@ -14,27 +14,27 @@ import { MetaService } from '../meta.service';
 import { Page } from '../../../domains/pages/page.model';
 import { LoggerService } from '../logger/logger.service';
 import { QueryBuilder } from '../../../domains/abstract/query-builder';
-import { Medicamento } from '../../../domains/medicamentos/medicamento.model';
 import { SearchableEntity } from '../../../domains/abstract/searchable-entity';
 import { PreloaderService } from '../../components/preloader/preloader.service';
-import { MedicamentoSearchFilterService } from '../../../units/medicamentos/medicamento-list/medicamento-search-filter.service';
 import { NotificationService } from '../../components/notification/notification.service';
-import { SearchableEntityInterface } from '../../../domains/abstract/searchable-entity-interface';
-import { LoggableEntityInterface } from '../../../domains/abstract/loggable-entity-interface';
-import { Activity } from '../../../domains/activities/activity.model';
+import { SearchableEntityDataInterface } from '../../../domains/abstract/searchable-entity-data-interface';
+import { SearchableEntityFilterService } from './searchable-entity-filter.service';
+import { DataEntityServiceLocatorService } from './data-entity-service-locator.service';
+import { ApiResponseInterface } from '../http/api-response-interface';
 
 @Injectable()
 export class DataService {
 
+  /**
+   * Configurações globais
+   */
+  public readonly config: any = {};
+
+  /**
+   * Dados globais
+   */
   public data: any = {
     page: new Page(),
-    medicamentos: {
-      entity: new Medicamento(),
-      item: new Medicamento().resetDataItem(),
-      collection: new Medicamento().resetDataCollection(),
-    },
-    notifications: {},
-    config: {},
     endpoint: '',
     queryBuilder: {},
     searchTerm: new Subject<string>(),
@@ -42,40 +42,128 @@ export class DataService {
   };
 
   /**
+   * Resposta da API
+   *
+   * @type {{}}
+   */
+  private apiResponse: any = {};
+
+  /**
    * DataService Constructor
    *
+   * Serviço de Configurações globais
    * @param configService
+   *
+   * Serviço de Localização de Entidades
+   * @param entityServiceLocator
+   *
+   * Serviço de Filtro de pesquisa
    * @param searchFilter
-   * @param preloaderService
+   *
+   * Serviço de Preload
+   * @param preloader
+   *
+   * Serviço de Log
    * @param logger
+   *
+   * Serviço de notificações
    * @param notificationService
+   *
+   * Serviço de SEO Meta
    * @param metaService
-   * @param httpService
+   *
+   * Serviço da API
+   * @param apiService
+   *
+   * Serviço de rota ativa
    * @param route
+   *
+   * Serviço de navegação
    * @param router
    */
   constructor(public readonly configService: ConfigService,
-              public searchFilter: MedicamentoSearchFilterService,
-              public preloaderService: PreloaderService,
+              public readonly apiService: HttpService,
+              private entityServiceLocator: DataEntityServiceLocatorService,
+              public searchFilter: SearchableEntityFilterService,
+              public preloader: PreloaderService,
               public logger: LoggerService,
               public notificationService: NotificationService,
               public metaService: MetaService,
-              protected httpService: HttpService,
-              protected route: ActivatedRoute,
-              protected router: Router) {
-    this.data.page = new Page({
-      title: this.configService.getSettings('system.app.name')
-    })
+              public route: ActivatedRoute,
+              public router: Router) {
+    Object.assign(this.config, this.configService.getSettings());
   }
 
   /**
-   * Recupera configuração a partir da chave informada
+   * Prepara a API de acordo com o endpoint informado
    *
-   * @param key
-   * @return {any}
+   * @param endpoint
+   * @return {DataService}
    */
-  getData(key: any): any {
-    return this.data[key];
+  startApi(endpoint: string,) {
+    this.setEndPoint(endpoint)
+      .resetDataItem();
+    return this;
+  }
+
+  /**
+   * Configura data.endpoint
+   *
+   * Exemplo caso seja informado o endpoint 'medicamentos':
+   *
+   * Será instanciada a entidade Medicamento;
+   * A partir da entidade instanciada será criada a seguinte configuração:
+   *
+   * data: {
+   *   medicamentos: {
+   *     entity: new Medicamento(),
+   *     item: {
+   *       data: {
+   *         ...
+   *         history: {
+   *           ...
+   *         }
+   *       }
+   *     },
+   *     collection: {
+   *       data: [item]
+   *     },
+   * @return {string}
+   */
+  setEndPoint(endpoint): any {
+    Object.assign(this.data, {
+      endpoint: endpoint,
+      [endpoint]: {
+        entity: this.entityServiceLocator.getInstance(endpoint),
+        item: this.entityServiceLocator.getInstance(endpoint).resetDataCollection(),
+        collection: this.entityServiceLocator.getInstance(endpoint).resetDataCollection(),
+      }
+    });
+    return this;
+  }
+
+  /**
+   * Retorna data.endpoint
+   *
+   * @return {string}
+   */
+  getEndPoint(): any {
+    return this.data.endpoint;
+  }
+
+  getPreload(): any {
+    return this.preloader;
+  }
+
+  /**
+   * Configura os parâmetros da requisição
+   *
+   * @param queryBuilder
+   * @return {DataService}
+   */
+  setQueryBuilder(queryBuilder?: QueryBuilder) {
+    this.data.queryBuilder = queryBuilder;
+    return this;
   }
 
   /**
@@ -91,19 +179,21 @@ export class DataService {
   }
 
   /**
-   * Prepara a API
-   *
-   * @param endpoint
-   * @return {DataService}
+   * Retorna os dados da página
+   * @return {Page}
    */
-  startApi(endpoint: string) {
-    this.data.endpoint = endpoint;
-    return this;
+  getPage() {
+    return this.data.page;
   }
 
-  setQueryBuilder(queryBuilder?: QueryBuilder) {
-    this.data.queryBuilder = queryBuilder;
-    return this;
+  /**
+   * Recupera configuração a partir da chave informada
+   *
+   * @param key
+   * @return {any}
+   */
+  getData(key: any): any {
+    return this.data[key];
   }
 
   /**
@@ -113,6 +203,7 @@ export class DataService {
     // console.clear();
     this.logger.debug({
       data: this.data,
+      config: this.config,
     });
   }
 
@@ -157,7 +248,7 @@ export class DataService {
   doSearch(terms?: Observable<any>) {
     this.setSearchParams();
     Object.assign(this.data.queryBuilder, {
-      endpoint: `${this.data.medicamentos.entity.getApiEndpoint()}`,
+      endpoint: `${this.data[this.getEndPoint()].entity.getApiEndpoint()}`,
     });
     this.search(this.data.searchTerm)
       .subscribe(res => {
@@ -182,10 +273,24 @@ export class DataService {
    * Alterna entre registros ativos e excluidos
    *
    * @param trashed
+   * @param event
    */
-  toggleTrashed(trashed: boolean) {
+  toggleTrashed(trashed: boolean, event?: any) {
+    if (event) {
+      event.preventDefault();
+    }
     this.searchFilter['onlyTrashed'] = trashed;
     this.getCollection();
+  }
+
+  /**
+   * Alterna entre registros ativos e excluidos baseando-se se a collection está vazia
+   */
+  private toggleTrashedByCollectionDataLength() {
+    let condition = (this.getCollectionData().length === 1);
+    if (condition) {
+      this.toggleTrashed(!this.searchFilter['onlyTrashed']);
+    }
   }
 
   /**
@@ -197,20 +302,22 @@ export class DataService {
   }
 
   /**
+   * Exibe e oculta o histórico de modificações do item
+   */
+  toggleHistoryShowHistory() {
+    Object.assign(this.data[this.getEndPoint()].item.config, {
+      showHistory: !this.data[this.getEndPoint()].item.config.showHistory,
+    });
+  }
+
+  /**
    * Exibe o total de registros nas abas Ativos e Deletados
    *
    * @return {boolean}
    */
   showCountActive() {
-    let total = this.getData(this.data.endpoint).collection.data.length;
+    let total = this.data[this.getEndPoint()].collection.data.length;
     return (this.searchFilter['onlyTrashed'] !== true && total > 0);
-  }
-
-  /**
-   * Exibe e oculta o histórico de modificações do Medicamento
-   */
-  toggleHistory() {
-    return this.data.showHistory != this.data.showHistory;
   }
 
   /**
@@ -223,36 +330,84 @@ export class DataService {
   }
 
   /**
-   * Retorna data.endpoint
-   *
-   * @return {string}
-   */
-  getEndPoint(): any {
-    return this.data.endpoint;
-  }
-
-  /**
    * Instancia uma Entidade
    *
    * @param endpoint
    */
   getEntity(endpoint?: string): SearchableEntity {
-    return this.getData(this.getEndPoint()).entity;
+    return this.data[this.getEndPoint()].entity;
+  }
+
+  /**
+   * Retorna os dados da coleção atual
+   */
+  getCollectionData(): any {
+    return this.data[this.getEndPoint()].collection.data;
+  }
+
+  /**
+   * Retorna configurações da coleção atual
+   */
+  getCollectionConfig(): any {
+    return this.configService.getSettings(`collections.${this.getEndPoint()}`);
+  }
+
+  /**
+   * Retorna os dados do item atual
+   */
+  getItemData(): any {
+    return this.data[this.getEndPoint()].item.data;
+  }
+
+  /**
+   * Modifica os dados do item atual
+   */
+  setItemData(data): any {
+    return this.data[this.getEndPoint()].item.data = data;
+  }
+
+  /**
+   * Verifica se existe erros de validação do campo
+   */
+  getItemHasErrors(field?: any): boolean {
+    if (!field) {
+      return !isNullOrUndefined(this.data[this.getEndPoint()].item.errors);
+    }
+    if (!isNullOrUndefined(this.data[this.getEndPoint()].item.errors)) {
+      return !isNullOrUndefined(this.data[this.getEndPoint()].item.errors[field])
+    }
+  }
+
+  /**
+   * Retorna os erros de validação do campo
+   */
+  getItemFieldErrors(field: any): any {
+    if (this.data[this.getEndPoint()].item.errors) {
+      return this.data[this.getEndPoint()].item.errors[field];
+    }
+    return [];
+  }
+
+  /**
+   * Retorna configurações da Entidade
+   */
+  getItemConfig(): any {
+    return this.data[this.getEndPoint()].item.config;
   }
 
   /**
    * Reinicia as propriedades de uma collection em data.{collection}
    */
-  private resetDataCollection() {
-    this.getData(this.getEndPoint()).collection = this.getEntity().resetDataCollection();
+  public resetDataCollection() {
+    this.data[this.getEndPoint()].collection = this.getEntity().resetDataCollection();
     return this;
   }
 
   /**
    * Reinicia as propriedades de um item em data.{item}
    */
-  private resetDataItem() {
-    this.getData(this.getEndPoint()).item = this.getEntity().resetDataItem();
+  public resetDataItem() {
+    this.data[this.getEndPoint()].item = this.getEntity().resetDataItem();
     return this;
   }
 
@@ -261,7 +416,7 @@ export class DataService {
    */
   private prepareCollectionQuery() {
     Object.assign(this.data.queryBuilder, {
-      include: this.getData(this.getEndPoint()).entity.getCollectionTransformers()
+      include: this.data[this.getEndPoint()].entity.getCollectionTransformers()
     });
     return this;
   }
@@ -272,7 +427,7 @@ export class DataService {
   getItemQueryBuilder(): QueryBuilder {
     return new QueryBuilder({
       endpoint: this.getEndPoint(),
-      include: this.getData(this.getEndPoint()).entity.getItemTransformers()
+      include: this.data[this.getEndPoint()].entity.getItemTransformers()
     });
   }
 
@@ -282,7 +437,7 @@ export class DataService {
   getCollectionQueryBuilder(): QueryBuilder {
     return new QueryBuilder({
       endpoint: this.getEndPoint(),
-      include: this.getData(this.getEndPoint()).entity.getCollectionTransformers()
+      include: this.data[this.getEndPoint()].entity.getCollectionTransformers()
     });
   }
 
@@ -293,14 +448,18 @@ export class DataService {
     this.resetDataCollection();
     this.prepareCollectionQuery();
     this.setSearchParams();
-    this.httpService
+    this.apiService
       .init(this.getCollectionQueryBuilder())
       .list(this.data.searchParams)
       .then((res) => {
-        Object.assign(this.getData(this.data.endpoint).collection, res);
+        this.setDataApiResponse(res);
+        Object.assign(this.data[this.getEndPoint()].collection, res);
         this.debug();
       })
-      .catch((error) => this.logger.error(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
   /**
@@ -309,49 +468,69 @@ export class DataService {
    * @param id: any
    */
   getItem(id: any) {
-    this.resetDataItem();
-    this.httpService
+    this.apiService
       .init(this.getItemQueryBuilder())
       .show(id)
       .then((res) => {
-        Object.assign(this.getData(this.data.endpoint).item, res);
+        this.setDataApiResponse(res);
+        this.resetDataItem();
+        Object.assign(this.data[this.getEndPoint()].item, res);
         this.debug();
       })
-      .catch((error) => this.logger.debug(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
   /**
    * Salva registro na API
+   *
+   * @param item
    */
-  saveItem() {
-    this.httpService
+  saveItem(item?: SearchableEntityDataInterface) {
+    if (!item) {
+      item = this.getItemData();
+    }
+    this.apiService
       .init(this.getItemQueryBuilder())
-      .post(this.getData(this.data.endpoint).item.data)
+      .post(item)
       .then((res) => {
-        this.getCollection();
-        Object.assign(this.getData(this.data.endpoint).item, res);
+        this.setDataApiResponse(res);
+        Object.assign(this.data[this.getEndPoint()].item, res);
+        this.checkIfRedirect('create');
+        this.notifyFromApiResponse(res);
         this.debug();
       })
-      .catch((error) => this.logger.debug(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
   /**
    * Atualiza um registro específico na API
    *
    * @param id
-   * @param item: any
+   * @param item
    */
-  updateItem(id: any, item: any) {
-    this.httpService
+  updateItem(id?: any, item?: SearchableEntityDataInterface) {
+    if (!item) {
+      item = this.getItemData();
+    }
+    this.apiService
       .init(this.getItemQueryBuilder())
-      .update(id, item)
+      .update(item.id, item)
       .then((res) => {
-        this.resetDataItem();
-        this.getCollection();
-        Object.assign(this.getData(this.data.endpoint).item, res);
-        this.debug();
+        this.setDataApiResponse(res);
+        Object.assign(this.data[this.getEndPoint()].item, res);
+        this.checkIfRedirect('update');
+        this.notifyFromApiResponse(res);
       })
-      .catch((error) => this.logger.debug(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
   /**
@@ -360,16 +539,21 @@ export class DataService {
    * @param id: any
    */
   removeItem(id: any) {
-    this.httpService
+    this.apiService
       .init(this.getItemQueryBuilder())
       .remove(id)
       .then((res) => {
+        this.setDataApiResponse(res);
         this.resetDataItem();
+        this.checkIfRedirect('delete');
         this.getCollection();
-        this.notificationService.showSuccess(res.message);
+        this.notifyFromApiResponse(res);
         this.debug();
       })
-      .catch((error) => this.logger.debug(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
   /**
@@ -378,16 +562,21 @@ export class DataService {
    * @param id: any
    */
   restoreItem(id: any) {
-    this.httpService
+    this.apiService
       .init(this.getItemQueryBuilder())
       .restore(id)
       .then((res) => {
+        this.setDataApiResponse(res);
         this.getItem(id);
         this.getCollection();
-        this.notificationService.showSuccess(res.message);
+        this.notifyFromApiResponse(res);
+        this.checkIfRedirect('restore', res);
         this.debug();
       })
-      .catch((error) => this.logger.debug(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
   /**
@@ -396,16 +585,57 @@ export class DataService {
    * @param id: any
    */
   forceRemoveItem(id: any) {
-    this.httpService
+    this.apiService
       .init(this.getItemQueryBuilder())
       .forceRemove(id)
       .then((res) => {
+        this.setDataApiResponse(res);
         this.resetDataItem();
+        this.toggleTrashedByCollectionDataLength();
         this.getCollection();
-        this.notificationService.showError(res.message);
+        this.notifyFromApiResponse(res);
+        this.checkIfRedirect('force_delete');
         this.debug();
       })
-      .catch((error) => this.logger.debug(error));
+      .catch((error) => {
+        this.logger.error(error)
+      });
+    return this;
   }
 
+  /**
+   * Atualiza this.data.apiResponse a partir da resposta da API
+   *
+   * @param res
+   */
+  setDataApiResponse(res: ApiResponseInterface) {
+    Object.assign(this.apiResponse, res);
+    return this;
+  }
+
+  /**
+   * Atualiza this.data.{endpoint}.item a partir da resposta da API
+   *
+   * @param res
+   */
+  private notifyFromApiResponse(res: ApiResponseInterface) {
+    if (res.errors) {
+      this.notificationService.showError(res.message);
+    } else {
+      this.notificationService.showSuccess(res.message);
+    }
+    this.debug();
+  }
+
+  /**
+   * Verifica se será feito redirecionamento de rota após operações crud
+   */
+  checkIfRedirect(operation: any, res?: ApiResponseInterface) {
+    if (this.config.system.app.crud.redirect[operation]) {
+      if (operation === 'restore') {
+        this.navigateToRoute(['/', this.getEndPoint(), this.getItemData().id]);
+      }
+      this.navigateToRoute(['/', this.getEndPoint()]);
+    }
+  }
 }

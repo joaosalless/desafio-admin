@@ -1,18 +1,35 @@
-<form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
-  <div class="form-group">
-    <label for="nome">{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}</label>
-    <input type="text"
-           class="form-control"
-           name="nome"
-           [(ngModel)]="data.medicamentos.item.data.nome"
-           placeholder="{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}">
-  </div>
-  <div class="form-group">
-    <label for="ggrem">{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</label>
-    <input type="text"
-           class="form-control"
-           name="ggrem"
-           [(ngModel)]="data.medicamentos.item.data.ggrem"
-           placeholder="{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}">
-  </div>
-</form>
+<div class="form-group" [ngClass]="{
+      'has-error': dataService.getItemHasErrors('nome')}">
+  <label class="control-label" for="nome">{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</label>
+  <input type="text"
+         class="form-control"
+         id="nome"
+         name="nome"
+         [(ngModel)]="item.nome"
+         [disabled]="item.deleted_at"
+         aria-describedby="nomeHelpBlock"
+         placeholder="{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}">
+  <span class="form-control-feedback"
+        aria-hidden="true"
+        [ngClass]="{'fa fa-times': dataService.getItemHasErrors('nome')}"></span>
+  <span id="nomeHelpBlock" class="help-block" *ngIf="dataService.getItemHasErrors('nome')">
+      {{ dataService.getItemFieldErrors('nome')[0] }}</span>
+</div>
+
+<div class="form-group" [ngClass]="{
+      'has-error': dataService.getItemHasErrors('ggrem')}">
+  <label class="control-label" for="ggrem">{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</label>
+  <input type="text"
+         class="form-control"
+         id="ggrem"
+         name="ggrem"
+         [(ngModel)]="item.ggrem"
+         [disabled]="item.deleted_at"
+         aria-describedby="ggremHelpBlock"
+         placeholder="{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}">
+  <span class="form-control-feedback"
+        aria-hidden="true"
+        [ngClass]="{'fa fa-times': dataService.getItemHasErrors('ggrem')}"></span>
+  <span id="ggremHelpBlock" class="help-block" *ngIf="dataService.getItemHasErrors('ggrem')">
+      {{ dataService.getItemFieldErrors('ggrem')[0] }}</span>
+</div>

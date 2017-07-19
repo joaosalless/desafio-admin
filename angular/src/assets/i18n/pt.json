@@ -21,6 +21,8 @@
     "CANCEL": "Cancelar",
     "SAVE": "Salvar",
     "DELETE": "Deletar",
+    "FORCE_DELETE": "Deletar permanentemente",
+    "RESTORE": "Restaurar",
     "SHOW": "Visualizar",
     "SHOW_HISTORY": "Ver Histórico",
     "HIDE_HISTORY": "Ocultar Histórico"

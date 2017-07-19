@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { ConfigService } from '@ngx-config/core';
 import { LoggerService } from './shared/services/logger/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastsManager } from 'ng2-toastr';
 
 @Component({
   selector: 'app-root',

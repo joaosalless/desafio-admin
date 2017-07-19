@@ -1,6 +1,7 @@
 @import "./vendors/bootstrap-sass/bootstrap-sprockets";
 @import 'variables';
 @import "./vendors/bootstrap-sass/bootstrap";
+@import 'utilities';
 @import "./vendors/font-awesome/font-awesome";
 @import "../../node_modules/animate.css/animate.css";
 @import "../app/shared/components/preloader/preloader.component";

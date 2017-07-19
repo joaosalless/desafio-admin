@@ -72,7 +72,7 @@ abstract class Controller extends BaseController
         if ($validator->fails()) {
             $response = $this->setResponseData([
                 'success' => false,
-                'status'  => HttpResponseCodes::HTTP_UNPROCESSABLE_ENTITY,
+                'status'  => HttpResponseCodes::HTTP_PARTIAL_CONTENT,
                 'message' => 'Dados inválidos',
                 'data'    => [
                     'errors' => $validator->errors(),
@@ -154,9 +154,10 @@ abstract class Controller extends BaseController
         if ($validator->fails()) {
             $response = $this->setResponseData([
                 'success' => false,
-                'status'  => HttpResponseCodes::HTTP_UNPROCESSABLE_ENTITY,
+                'status'  => HttpResponseCodes::HTTP_PARTIAL_CONTENT,
                 'message' => 'Dados inválidos',
                 'data'    => [
+                    'data'   => $data,
                     'errors' => $validator->errors(),
                 ],
             ]);
@@ -166,7 +167,7 @@ abstract class Controller extends BaseController
 
         try {
 
-            $medicamento = $this->repository->with($this->getRelations('item'))->update($request->all(), $id);
+            $medicamento = $this->repository->with($this->getRelations('item'))->update($data, $id);
 
             if ($medicamento) {
                 $medicamento = $this->repository->with($this->getRelations('item'))->find($id);

@@ -11,7 +11,6 @@ import { HttpRequestOptionsService } from './services/http/http-request-options.
 import { HttpService } from './services/http/http.service';
 import { JwtTokenService } from './services/jwt-token.service';
 import { LocalStorageService } from './services/local-storage.service';
-import { FormDebugComponent } from './components/form-debug/form-debug.component';
 import { CampoControlErroComponent } from './components/campo-control-erro/campo-control-erro.component';
 import { MetaService } from "app/shared/services/meta.service";
 import { PaginationComponent } from './components/pagination/pagination.component';
@@ -21,10 +20,13 @@ import { PreloaderComponent } from './components/preloader/preloader.component';
 import { DataService } from './services/data/data.service';
 import { NotificationModule } from './components/notification/notification.module';
 import { NotificationService } from './components/notification/notification.service';
+import { SearchableEntityFilterService } from './services/data/searchable-entity-filter.service';
+import { DataEntityServiceLocatorService } from './services/data/data-entity-service-locator.service';
+import { DebugDataComponent } from './components/debug/debug-data/debug-data.component';
 
 const DECLARATIONS_SHARED_MODULE = [
-  FormDebugComponent,
   CampoControlErroComponent,
+  DebugDataComponent,
   PaginationComponent,
   PreloaderComponent,
   StrReplacePipe,
@@ -60,7 +62,9 @@ const SHARED_ROUTES: Routes = [];
     MetaService,
     PreloaderService,
     DataService,
+    DataEntityServiceLocatorService,
     NotificationService,
+    SearchableEntityFilterService,
     { provide: Http, useClass: PreloaderHttpInterceptor },
   ],
 })

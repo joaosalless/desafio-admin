@@ -13,6 +13,7 @@ abstract class ApiResponseAbstractProvider implements ApiResponseContract
             'api' => [
                 'version'       => self::API_VERSION,
                 'name'          => config('app.name'),
+                'docs'          => config('app.url') . '/docs',
                 'requested_url' => request()->url(),
             ],
         ];

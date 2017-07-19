@@ -58,7 +58,7 @@ export class HttpService {
 
   show(id: string) {
     let relations = this.relations ? this.relations : '';
-    let url = `${this.url}/${id}${relations}`;
+    let url = `${this.url}/${id}/${relations}`;
     return this.http.get(url, this.requestOptions.merge(new RequestOptions()))
       .toPromise()
       .then((res) => {
@@ -67,8 +67,9 @@ export class HttpService {
   }
 
   update(id: any, data: any) {
-    let url = `${this.url}/${id}`;
-    return this.http.put(url, { data }, this.requestOptions.merge(new RequestOptions()))
+    let relations = this.relations ? this.relations : '';
+    let url = `${this.url}/${id}/${relations}`;
+    return this.http.put(url, data, this.requestOptions.merge(new RequestOptions()))
       .toPromise()
       .then((res) => {
         return res.json() || {};
@@ -76,8 +77,9 @@ export class HttpService {
   }
 
   post(data: any) {
-    console.log(data);
-    return this.http.post(this.url, data, this.requestOptions.merge(new RequestOptions()))
+    let relations = this.relations ? this.relations : '';
+    let url = `${this.url}/${relations}`;
+    return this.http.post(url, data, this.requestOptions.merge(new RequestOptions()))
       .toPromise()
       .then((res) => {
         return res.json() || {};
@@ -86,7 +88,8 @@ export class HttpService {
   }
 
   remove(id: number) {
-    let url = `${this.url}/${id}`;
+    let relations = this.relations ? this.relations : '';
+    let url = `${this.url}/${id}/${relations}`;
     return this.http.delete(url, this.requestOptions.merge(new RequestOptions()))
       .toPromise()
       .then((res) => {
@@ -95,7 +98,8 @@ export class HttpService {
   }
 
   restore(id: number) {
-    let url = `${this.url}/${id}/restore`;
+    let relations = this.relations ? this.relations : '';
+    let url = `${this.url}/${id}/restore/${relations}`;
     return this.http.get(url, this.requestOptions.merge(new RequestOptions()))
       .toPromise()
       .then((res) => {

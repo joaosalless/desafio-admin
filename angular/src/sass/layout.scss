@@ -4,6 +4,10 @@
 body {
   padding-top: 50px;
   padding-bottom: 50px;
+
+  * {
+    outline: none !important;
+  }
 }
 
 a.text-danger,
@@ -17,4 +21,12 @@ a.text-danger,
 
 .no-margin {
   margin: 0;
+}
+
+form {
+  .form-control-feedback {
+    position: relative;
+    float: right;
+    margin-top: -25px;
+  }
 }

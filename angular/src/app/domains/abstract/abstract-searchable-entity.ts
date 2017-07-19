@@ -1,66 +1,32 @@
-import { Historico } from './historico.model';
-import { AbstractSearchableEntity } from '../abstract/abstract-searchable-entity';
+import { AbstractEntity } from './abstract-entity.model';
+import { LoggableEntityInterface } from './loggable-entity-interface';
+import { SearchableEntityInterface } from './searchable-entity-interface';
 
-export class Medicamento extends AbstractSearchableEntity {
-
-  /**
-   * id attribute
-   *
-   * @type {number}
-   */
-  id?: any;
+export abstract class AbstractSearchableEntity extends AbstractEntity implements SearchableEntityInterface, LoggableEntityInterface {
 
   /**
-   * ggrem attribute
+   * data attribute
    *
    * @type {any}
    */
-  ggrem?: any = null;
-
-  /**
-   * nome attribute
-   *
-   * @type {string}
-   */
-  nome?: any = null;
-
-  /**
-   * deleted_at attribute
-   *
-   * @type {any}
-   */
-  deleted_at?: any = null;
-
-  /**
-   * created_at attribute
-   *
-   * @type {any}
-   */
-  created_at?: any = null;
-
-  /**
-   * updated_at attribute
-   *
-   * @type {any}
-   */
-  updated_at?: any = null;
+  data?: any;
 
   /**
    * history attribute
    *
-   * Histórico de alterações.
-   * Só consta no resultado de uma consulta quando é solicitado via fractals transformer.
-   *
-   * @type {{data: Historico}}
+   * @type {any}
    */
-  history?: any = {
-    data: new Historico(),
-  };
+  history?: any;
+
+  /**
+   * Especifica os campos editaveis da Entidade
+   */
+  protected fillable?: any[];
 
   /**
    * Especifica o endpoint da API para esta Entidade
    */
-  protected apiEndpoint: string = 'medicamentos';
+  protected apiEndpoint: any = null;
 
   /**
    * Especifica as relações a serem incluidas na coleção pelo Fractals Transformer
@@ -70,16 +36,38 @@ export class Medicamento extends AbstractSearchableEntity {
   /**
    * Especifica as relações a serem incluidas no item pelo Fractals Transformer
    */
-  protected itemTransformers: any[] = ['history'];
+  protected itemTransformers: any[] = [];
 
   /**
-   * Medicamento class constructor
-   *
-   * @param medicamento
+   * Especifica as relações a serem incluidas na coleção pelo Fractals Transformer
    */
-  constructor(medicamento?: Medicamento) {
-    super();
-    Object.assign(this, medicamento);
+  getCollectionTransformers(): any[] {
+    return this.collectionTransformers;
+  }
+
+  /**
+   * Especifica as relações a serem incluidas no item pelo Fractals Transformer
+   */
+  getItemTransformers(): any[] {
+    return this.itemTransformers;
+  }
+
+  /**
+   * Retorna o Histórico de alterações
+   *
+   * Só consta no resultado de uma consulta quando é solicitado via fractals transformer.
+   *
+   * @type {any}
+   */
+  getHistory(): any {
+    return this.history;
+  }
+
+  /**
+   * Retorna os campos editaveis da Entidade
+   */
+  getFillable(): any[] {
+    return this.fillable;
   }
 
   /**

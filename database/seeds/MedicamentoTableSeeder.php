@@ -28,6 +28,12 @@ class MedicamentoTableSeeder extends Seeder
             DB::table($this->model->getTable())->insert($medicamento);
             activity()
                 ->performedOn(Medicamento::find($medicamento['id']))
+                ->withProperties(collect([
+                    'attributes' => [
+                        'nome'  => $medicamento['nome'],
+                        'ggrem' => $medicamento['ggrem'],
+                    ]
+                ]))
                 ->log('created');
         }
     }

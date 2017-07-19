@@ -53,17 +53,13 @@
               ({{ data.medicamentos.item.data.history.data.length }} alterações)
             </span>
             </span>
-                <span *ngIf="dataService.getItemConfig().showHistory">
+            <span *ngIf="dataService.getItemConfig().showHistory">
               {{ 'ACTIONS.HIDE_HISTORY' | translate }}
             </span>
           </button>
         </div>
 
-        <div class="panel-body border-top" *ngIf="dataService.getItemConfig().showHistory">
-          <h4 class="no-margin">Histórico</h4>
-        </div>
-
-        <div id="historyPanelBody" class="panel-body no-padding-vertical" *ngIf="dataService.getItemConfig().showHistory">
+        <div class="panel-body border-top no-padding-vertical" *ngIf="dataService.getItemConfig().showHistory">
           <app-medicamento-history [item]="data.medicamentos.item.data">
           </app-medicamento-history>
         </div>

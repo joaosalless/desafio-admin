@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SearchableEntityFilterService } from '../../../shared/services/data/searchable-entity-filter.service';
+import { SearchableEntityFilterInterface } from './searchable-entity-filter-interface';
 
 @Injectable()
-export class MedicamentoSearchFilterService extends SearchableEntityFilterService {
+export class SearchableEntityFilterService implements SearchableEntityFilterInterface {
 
   public search = '';
   public include: any = '';
@@ -32,4 +32,5 @@ export class MedicamentoSearchFilterService extends SearchableEntityFilterServic
       layout: 'list',
     })
   }
+
 }

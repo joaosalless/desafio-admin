@@ -6,6 +6,13 @@
       "url": "http://localhost:8000",
       "search": {
         "updateUrl": true
+      },
+      "crud": {
+        "redirect": {
+          "create": false,
+          "update": false,
+          "restore": true
+        }
       }
     },
     "api": {
@@ -14,10 +21,14 @@
     },
     "debug": {
       "enabled": true,
+      "showDebugView": true,
       "logOnConsole": true,
       "logOnServer": false,
       "serverLogUrl": null,
       "serverLogLevel": "DEBUG"
+    },
+    "domains": {
+      "medicamentos": {}
     }
   },
   "developer": {
@@ -48,7 +59,7 @@
   "theme": {
     "default": {
       "colors": {
-        "primary": "#428bca",
+        "primary": "#20AFD6",
         "success": "#5cb85c",
         "info": "#5bc0de",
         "warning": "#f0ad4e",
