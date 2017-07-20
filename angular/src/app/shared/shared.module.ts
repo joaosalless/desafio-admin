@@ -11,7 +11,6 @@ import { HttpRequestOptionsService } from './services/http/http-request-options.
 import { HttpService } from './services/http/http.service';
 import { JwtTokenService } from './services/jwt-token.service';
 import { LocalStorageService } from './services/local-storage.service';
-import { CampoControlErroComponent } from './components/campo-control-erro/campo-control-erro.component';
 import { MetaService } from "app/shared/services/meta.service";
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PreloaderHttpInterceptor } from './components/preloader/preloader.http-interceptor';
@@ -26,7 +25,6 @@ import { DebugDataComponent } from './components/debug/debug-data/debug-data.com
 import { PageTitleComponent } from './components/page-title/page-title.component';
 
 const DECLARATIONS_SHARED_MODULE = [
-  CampoControlErroComponent,
   DebugDataComponent,
   PaginationComponent,
   PreloaderComponent,

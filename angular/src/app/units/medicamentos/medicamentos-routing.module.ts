@@ -17,11 +17,6 @@ const medicamentosRoutes: Routes = [
     pathMatch: 'full',
     component: MedicamentoListComponent,
   },
-  {
-    path: '/cadastrar',
-    pathMatch: 'full',
-    component: MedicamentoCreateComponent,
-  },
 ];
 
 @NgModule({

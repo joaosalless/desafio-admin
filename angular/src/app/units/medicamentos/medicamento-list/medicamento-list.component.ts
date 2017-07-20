@@ -36,8 +36,12 @@ export class MedicamentoListComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  createItem(){
+  createItem() {
     this.dataService.setView('create');
+  }
+
+  setView(view = 'list') {
+    this.dataService.setView(view);
   }
 
 }
