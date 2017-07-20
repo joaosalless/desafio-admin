@@ -92,7 +92,11 @@ http://localhost:8000/api/admin/medicamentos
 
 #### Frontend Angular
 
-Acesse a pasta angular na raiz do projeto e rode o comando 
+Para acessar o frontend, acesse a url do servidor da API normalmente.
+
+```php
+http://localhost:8000
+```
 
 ```php
 ng serve
@@ -103,3 +107,11 @@ Acesse o frontend na Url
 ```shell
 http://localhost:4200
 ```
+
+#### Screenshots
+
+![](./docs/img1.png)
+
+![](./docs/img2.png)
+
+![](./docs/img3.png)
