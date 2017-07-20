@@ -63,3 +63,43 @@ Lembre-se de alterar o README.md com as instruções para rodar o projeto.
 Boa sorte _and let’s code_!
 
 :m: Equipe Memed
+
+# Instruções de uso
+
+Faça o clone deste repositório com o comando:
+
+```shell
+git clone https://github.com/joaosalless/desafio-admin.git
+```
+
+Acesse acesse a pasta do projeto via terminal;
+
+Instale as dependências do composer com o comando;
+
+```shell
+composer install
+```
+
+#### API
+
+Execute este comando para iniciar o artisan serve que irá gerar a base de dados sqlite automaticamente, executar as migrations e os seeders.
+
+Acesse a API no endereço
+
+```php
+http://localhost:8000/api/admin/medicamentos
+```
+
+#### Frontend Angular
+
+Acesse a pasta angular na raiz do projeto e rode o comando 
+
+```php
+ng serve
+```
+
+Acesse o frontend na Url 
+
+```shell
+http://localhost:4200
+```

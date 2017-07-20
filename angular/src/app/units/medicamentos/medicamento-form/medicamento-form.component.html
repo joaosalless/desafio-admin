@@ -1,0 +1,31 @@
+<div class="form-group" [ngClass]="{
+      'has-error': dataService.getItemHasErrors('nome')}">
+  <label class="control-label" for="nome">{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}</label>
+  <input type="text"
+         class="form-control"
+         id="nome"
+         name="nome"
+         [(ngModel)]="item.nome"
+         [disabled]="item.deleted_at"
+         aria-describedby="nomeHelpBlock"
+         placeholder="{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}">
+  <span class="form-control-feedback" aria-hidden="true"></span>
+  <span id="nomeHelpBlock" class="help-block" *ngIf="dataService.getItemHasErrors('nome')">
+      {{ dataService.getItemFieldErrors('nome')[0] }}</span>
+</div>
+
+<div class="form-group" [ngClass]="{
+      'has-error': dataService.getItemHasErrors('ggrem')}">
+  <label class="control-label" for="ggrem">{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</label>
+  <input type="text"
+         class="form-control"
+         id="ggrem"
+         name="ggrem"
+         [(ngModel)]="item.ggrem"
+         [disabled]="item.deleted_at"
+         aria-describedby="ggremHelpBlock"
+         placeholder="{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}">
+  <span class="form-control-feedback" aria-hidden="true" ></span>
+  <span id="ggremHelpBlock" class="help-block" *ngIf="dataService.getItemHasErrors('ggrem')">
+      {{ dataService.getItemFieldErrors('ggrem')[0] }}</span>
+</div>

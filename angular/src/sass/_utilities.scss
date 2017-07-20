@@ -1,0 +1,145 @@
+//
+// Utility classes
+// --------------------------------------------------
+
+// Remove borders
+.border {
+    border: 1px solid $panel-default-border !important;
+}
+
+.border-top {
+    border-top: 1px solid $panel-default-border !important;
+}
+
+.border-right {
+    border-right: 1px solid $panel-default-border !important;
+}
+
+.border-bottom {
+    border-bottom: 1px solid $panel-default-border !important;
+}
+
+.border-left {
+    border-left: 1px solid $panel-default-border !important;
+}
+
+// Remove borders
+.no-border {
+    border: 0 !important;
+}
+
+.no-border-top {
+    border-top: 0 !important;
+}
+
+.no-border-right {
+    border-right: 0 !important;
+}
+
+.no-border-bottom {
+    border-bottom: 0 !important;
+}
+
+.no-border-left {
+    border-left: 0 !important;
+}
+
+// Padding
+.padding {
+    padding: $padding-base-vertical !important;
+}
+
+.padding-top {
+    padding-top: $padding-base-vertical !important;
+}
+
+.padding-right {
+    padding-right: $padding-base-vertical !important;
+}
+
+.padding-bottom {
+    padding-bottom: $padding-base-vertical !important;
+}
+
+.padding-left {
+    padding-left: $padding-base-vertical !important;
+}
+
+
+// Remove padding
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-padding-top {
+    padding-top: 0 !important;
+}
+
+.no-padding-right {
+    padding-right: 0 !important;
+}
+
+.no-padding-bottom {
+    padding-bottom: 0 !important;
+}
+
+.no-padding-left {
+    padding-left: 0 !important;
+}
+
+.no-padding-vertical {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.no-padding-horizontal {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+// Margin
+.margin {
+    margin: 0 !important;
+}
+
+.margin-top {
+    margin-top: $grid-gutter-width !important;
+}
+
+.margin-right {
+    margin-right: $grid-gutter-width !important;
+}
+
+.margin-bottom {
+    margin-bottom: $grid-gutter-width !important;
+}
+
+.margin-left {
+    margin-left: $grid-gutter-width !important;
+}
+
+// Remove margins
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-margin-top {
+    margin-top: 0 !important;
+}
+
+.no-margin-right {
+    margin-right: 0 !important;
+}
+
+.no-margin-bottom {
+    margin-bottom: 0 !important;
+}
+
+.no-margin-left {
+    margin-left: 0 !important;
+}
+
+// Remove box shadow
+.no-shadow {
+    box-shadow: none !important;
+}

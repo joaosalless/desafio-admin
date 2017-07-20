@@ -1,0 +1,25 @@
+<div *ngIf="dataService.config.system.debug.showDebugView">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-bug"> DEBUG</i>
+    </div>
+    <div class="panel-body">
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"class="active"><a href="#itemData" aria-controls="itemData" role="tab" data-toggle="tab">Item Data</a></li>
+        <!--<li role="presentation"><a href="#itemEntity" aria-controls="itemEntity" role="tab" data-toggle="tab">Item Entity</a></li>-->
+        <li role="presentation"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">Global Data</a></li>
+        <li role="presentation"><a href="#config" aria-controls="config" role="tab" data-toggle="tab">Global Config</a></li>
+        <li role="presentation"><a href="#response" aria-controls="response" role="tab" data-toggle="tab">API Response</a></li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="itemData"><pre>{{ dataService.data[dataService.getEndPoint()].item.data | json }}</pre></div>
+        <!--<div role="tabpanel" class="tab-pane" id="itemEntity"><pre>{{ dataService.data[dataService.getEndPoint()].entity | json }}</pre></div>-->
+        <div role="tabpanel" class="tab-pane" id="data"><pre>{{ dataService.data | json }}</pre></div>
+        <div role="tabpanel" class="tab-pane" id="config"><pre>{{ dataService.config | json }}</pre></div>
+        <div role="tabpanel" class="tab-pane" id="response"><pre>{{ dataService.apiResponse | json }}</pre></div>
+      </div>
+    </div>
+  </div>
+</div>

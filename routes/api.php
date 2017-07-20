@@ -27,21 +27,21 @@ Route::group([
 ], function () {
 
     Route::get('/', ['as' => 'index', 'uses' => "DashboardController@index"]);
-
     /*
     |--------------------------------------------------------------------------
     | Medicamentos Api Routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/medicamentos/trashed', ['as' => 'medicamentos.trashed', 'uses' => "MedicamentosController@getTrashed"]);
+    Route::get('/medicamentos/{id}/restore',      ['as' => 'medicamentos.restore',      'uses' => "MedicamentosController@restore"]);
+    Route::get('/medicamentos/{id}/force_delete', ['as' => 'medicamentos.force_delete', 'uses' => "MedicamentosController@forceDelete"]);
 
     Route::resource('medicamentos', 'MedicamentosController', [
         'only'       => [
             'index',
-            //'store',
+            'store',
             'show',
             'update',
-            //'destroy',
+            'destroy',
         ],
         'parameters' => [
             'medicamentos' => 'id',

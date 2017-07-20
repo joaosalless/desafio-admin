@@ -1,0 +1,25 @@
+@import "../../../../../sass/variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+
+.header-row {
+  margin: 30px 0 0 0;
+  .title {
+    margin: 0;
+  }
+}
+
+table {
+  .th-for-btn {
+    width: 20px;
+    padding: 0;
+  }
+  .td-for-btn {
+    width: 20px;
+    padding: 3px 3px 0 0;
+    .btn {
+      &:hover {
+        background: #f1f1f1;
+      }
+    }
+  }
+}

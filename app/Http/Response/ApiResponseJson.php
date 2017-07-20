@@ -16,11 +16,11 @@ class ApiResponseJson extends ApiResponseAbstractProvider
     public function getResponse(array $data, bool $success = true, $status = 0, $message = null, $showApiInfo = false)
     {
         $response = array_merge(
+            $showApiInfo ? $this->getApiInfo() : [],
+            $message ? ['message' => $message] : [],
             ['success' => $success],
             ['status'  => $status],
-            $message ? ['message' => $message] : [],
-            $data,
-            $showApiInfo ? $this->getApiInfo() : []
+            $data
         );
 
         return response()->json($response, $status);

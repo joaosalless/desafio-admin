@@ -22,3 +22,10 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Models\Medicamento::class, function (Faker\Generator $faker) {
+    return [
+        'nome' => $faker->name,
+        'ggrem' => rand(1000000000, 9999999999),
+    ];
+});

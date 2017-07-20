@@ -1,0 +1,32 @@
+@import "./variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+
+body {
+  padding-top: 50px;
+  padding-bottom: 50px;
+
+  * {
+    outline: none !important;
+  }
+}
+
+a.text-danger,
+.btn.text-danger {
+  color: red !important;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+form {
+  .form-control-feedback {
+    position: relative;
+    float: right;
+    margin-top: -25px;
+  }
+}
