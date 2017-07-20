@@ -2,6 +2,7 @@ import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { DataService } from '../../../shared/services/data/data.service';
 import { ConfigService } from '@ngx-config/core';
 import { ToastsManager } from 'ng2-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-medicamento-view-switch',
@@ -17,17 +18,22 @@ export class MedicamentoViewSwitchComponent implements OnInit {
   constructor(public readonly configService: ConfigService,
               public dataService: DataService,
               public vcr: ViewContainerRef,
-              public toastr: ToastsManager) {
+              public toastr: ToastsManager,
+              protected route: ActivatedRoute,
+              protected router: Router) {
     this.toastr.setRootViewContainerRef(vcr)
   }
 
   ngOnInit() {
-    this.view = this.dataService.data.view;
-    this.data = this.dataService.data;
-    this.config = this.configService.getSettings();
-    this.dataService.startApi('medicamentos');
-    this.dataService.setSearchParams();
-    this.dataService.getCollection();
+    this.route.params.subscribe((params: any) => {
+      this.config = this.dataService.config;
+      this.view = this.dataService.data.view;
+      this.data = this.dataService.data;
+      this.config = this.configService.getSettings();
+      this.dataService.startApi('medicamentos');
+      this.dataService.setSearchParams();
+      this.dataService.getCollection();
+    });
     window.scrollTo(0, 0);
   }
 

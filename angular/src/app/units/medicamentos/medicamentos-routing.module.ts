@@ -9,13 +9,18 @@ import { MedicamentoViewSwitchComponent } from './medicamento-view-switch/medica
 const medicamentosRoutes: Routes = [
   {
     path: ':id',
-    pathMatch: 'full',
-    component: MedicamentoViewSwitchComponent
+    pathMatch: 'prefix',
+    component: MedicamentoEditComponent
   },
   {
     path: '',
     pathMatch: 'full',
-    component: MedicamentoViewSwitchComponent,
+    component: MedicamentoListComponent,
+  },
+  {
+    path: '/cadastrar',
+    pathMatch: 'full',
+    component: MedicamentoCreateComponent,
   },
 ];
 

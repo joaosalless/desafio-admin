@@ -1,7 +1,9 @@
+<preloader></preloader>
+<notification></notification>
 
 <app-page-title></app-page-title>
 
-<div class="row">
+<div class="row" *ngIf="!preloaderService.getPendingRequests()">
   <div class="col-sm-12">
     <div class="panel panel-default">
       <div class="panel-body border-bottom">
@@ -19,7 +21,7 @@
           </form>
         </div>
         <div class="col-xs-3 col-lg-2 no-padding">
-          <button class="btn btn-primary btn-block pull-right" (click)="createItem()">Cadastrar</button>
+          <button class="btn btn-primary btn-block pull-right" (click)="dataService.navigateToRoute(['/medicamentos/cadastrar'])">Cadastrar</button>
         </div>
       </div>
       <div class="panel-body border-bottom">
@@ -49,7 +51,7 @@
         </ul>
       </div>
       <div class="panel-body">
-        <div class="tab-content animated fadeIn" *ngIf="!preloaderService.getPendingRequests()">
+        <div class="tab-content">
           <app-medicamento-list-table [collection]="data.medicamentos.collection"
                                       *ngIf="data.medicamentos.collection.meta?.pagination.total > 0">
           </app-medicamento-list-table>

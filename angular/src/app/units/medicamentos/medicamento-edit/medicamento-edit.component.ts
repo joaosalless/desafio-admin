@@ -50,21 +50,20 @@ export class MedicamentoEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub  = this.route.params.subscribe(params => {
+    this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });
-    this.route.params
-      .subscribe((params: any) => {
-        this.config = this.dataService.config;
-        this.dataService.startApi('medicamentos');
-        this.item = this.dataService.data.medicamentos.item.data;
-        this.dataService.setPage(new Page({
-          slug: 'medicamentos-edit',
-          title: 'Editando Apresentações Alopáticos',
-        }));
-        this.dataService.getItem(params.id);
-        this.data = this.dataService.data;
-      });
+    this.route.params.subscribe((params: any) => {
+      this.config = this.dataService.config;
+      this.dataService.startApi('medicamentos');
+      this.item = this.dataService.data.medicamentos.item.data;
+      this.dataService.setPage(new Page({
+        slug: 'medicamentos-edit',
+        title: 'Editando Apresentações Alopáticos',
+      }));
+      this.dataService.getItem(params.id);
+      this.data = this.dataService.data;
+    });
     window.scrollTo(0, 0);
     this.dataService.debug();
   }
@@ -76,20 +75,25 @@ export class MedicamentoEditComponent implements OnInit, OnDestroy {
   /**
    * Cancela a edição e retorna para a coleção de itens
    */
-  cancel() {
+  onCancel(vent) {
+    event.preventDefault();
+    this.router.navigate(['/', 'medicamentos']);
     this.dataService.setView('list');
-    this.router.navigate(['/medicamentos']);
   }
 
+  /**
+   * Atualiza o item na API
+   */
   updateItem() {
     this.dataService.updateItem();
-    this.dataService.setView('list');
-    // this.dataService.updateItem(this.data.medicamentos.item.data.deleted_at);
-    // this.router.navigate(['/medicamentos']);
+    this.router.navigate(['/medicamentos']);
     // this.dataService.notificationService.showSuccess('Registro atualizado com sucesso.');
   }
 
-  restoreItem(){
+  /**
+   * Restaura o item excluido
+   */
+  restoreItem() {
     this.dataService.restoreItem(this.data.medicamentos.item.data.id);
     this.router.navigate(['/medicamentos']);
     this.dataService.setView('list');
