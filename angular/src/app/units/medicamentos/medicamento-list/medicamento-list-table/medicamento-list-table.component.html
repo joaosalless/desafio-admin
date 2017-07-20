@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<table class="table table-hover no-margin">
   <thead>
   <tr>
     <th>{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}</th>
@@ -22,10 +22,16 @@
       {{ medicamento.deleted_at | date: 'dd/MM/y HH:mm:ss' }}
     </td>
     <td class="td-for-btn">
-      <a [routerLink]="['/medicamentos', medicamento.id]" class="btn btn-sm btn-link">
+      <!--<a [routerLink]="['/medicamentos', medicamento.id]" class="btn btn-sm btn-link">-->
+        <!--<i class="fa fa-edit"></i>-->
+      <!--</a>-->
+      <button (click)="editItem(medicamento.id)"
+              title="Editar"
+              class="btn btn-sm btn-link">
         <i class="fa fa-edit"></i>
-      </a>
+      </button>
     </td>
+
     <td class="td-for-btn" *ngIf="medicamento.deleted_at === null">
       <button (click)="removeItem(medicamento.id)"
               title="Deletar"

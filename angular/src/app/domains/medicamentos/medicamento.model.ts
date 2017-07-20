@@ -127,17 +127,16 @@ export class Medicamento extends AbstractSearchableEntity {
    */
   public resetDataItem() {
     return {
-      data: [],
+      data: {
+        id: null,
+        nome: null,
+        ggrem: null,
+        created_at: null,
+        deleted_at: null,
+        updated_at: null,
+      },
       config: {
         showHistory: false,
-        crud: {
-          redirect: {
-            created: true,
-            updated: true,
-            force_deleted: true,
-            restored: true,
-          }
-        }
       },
     };
   }

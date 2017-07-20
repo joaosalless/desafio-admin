@@ -1,76 +1,70 @@
-<preloader></preloader>
-<notification></notification>
 
-<div class="row header-row">
+<app-page-title></app-page-title>
 
-  <div class="col-xs-12 col-lg-6">
-    <h2 class="title">Apresentações Alopáticos</h2>
-  </div>
-
-  <div class="col-xs-9 col-lg-4">
-    <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
-      <input type="text"
-             [(ngModel)]="dataService.searchFilter.search"
-             (keyup)="dataService.onFilterChange($event)"
-             name="search"
-             class="form-control"
-             placeholder="Pesquisar...">
-    </form>
-  </div>
-
-  <div class="col-xs-3 col-lg-2 no-padding">
-    <button class="btn btn-primary btn-block pull-right" (click)="createItem()">Cadastrar</button>
-  </div>
-
-  <div class="col-md-12" *ngIf="!preloaderService.getPendingRequests()">
-    <hr>
-
-    <ul class="nav nav-tabs" role="tablist">
-
-      <li role="presentation" [ngClass]="{'active': !dataService.searchFilter.onlyTrashed}">
-        <a href="#active" aria-controls="active" role="tab" data-toggle="tab"
-           (click)="dataService.toggleTrashed(false, $event)">
-          {{ 'DOMAINS.ACTIVE_PLURAL' | translate }}
-          <span *ngIf="!dataService.searchFilter.onlyTrashed">
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body border-bottom">
+        <div class="col-xs-12 col-lg-6">
+          <h3 class="no-margin">{{ dataService.getPage().title }}</h3>
+        </div>
+        <div class="col-xs-9 col-lg-4">
+          <form #f="ngForm" (ngSubmit)="onSubmit(f)" autocomplete="off">
+            <input type="text"
+                   [(ngModel)]="dataService.searchFilter.search"
+                   (keyup)="dataService.onFilterChange($event)"
+                   name="search"
+                   class="form-control"
+                   placeholder="Pesquisar...">
+          </form>
+        </div>
+        <div class="col-xs-3 col-lg-2 no-padding">
+          <button class="btn btn-primary btn-block pull-right" (click)="createItem()">Cadastrar</button>
+        </div>
+      </div>
+      <div class="panel-body border-bottom">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" [ngClass]="{'active': !dataService.searchFilter.onlyTrashed}">
+            <a href="#active" aria-controls="active" role="tab" data-toggle="tab"
+               (click)="dataService.toggleTrashed(false, $event)">
+              {{ 'DOMAINS.ACTIVE_PLURAL' | translate }}
+              <span *ngIf="!dataService.searchFilter.onlyTrashed">
             <span>
               ({{ data.medicamentos.collection.data.length }})
             </span>
           </span>
-        </a>
-      </li>
-
-      <li role="presentation" [ngClass]="{'active': dataService.searchFilter.onlyTrashed}">
-        <a href="#trashed" aria-controls="trashed" role="tab" data-toggle="tab"
-           (click)="dataService.toggleTrashed(true, $event)">
-          {{ 'DOMAINS.TRASHED_PLURAL' | translate }}
-          <span *ngIf="dataService.searchFilter.onlyTrashed">
+            </a>
+          </li>
+          <li role="presentation" [ngClass]="{'active': dataService.searchFilter.onlyTrashed}">
+            <a href="#trashed" aria-controls="trashed" role="tab" data-toggle="tab"
+               (click)="dataService.toggleTrashed(true, $event)">
+              {{ 'DOMAINS.TRASHED_PLURAL' | translate }}
+              <span *ngIf="dataService.searchFilter.onlyTrashed">
             <span *ngIf="!preloaderService.getPendingRequests()">
               ({{ data.medicamentos.collection.data.length }})
             </span>
           </span>
-        </a>
-      </li>
-
-    </ul>
-
-    <div class="tab-content animated fadeIn" *ngIf="!preloaderService.getPendingRequests()">
-
-      <app-medicamento-list-table [collection]="data.medicamentos.collection"
-                                  *ngIf="data.medicamentos.collection.meta?.pagination.total > 0">
-      </app-medicamento-list-table>
-
-      <app-pagination class="text-center"
-                      *ngIf="data.medicamentos.collection.length>0"
-                      [totalRegistros]="totalRegistros"
-                      [qtdPorPagina]="qtdPorPagina"
-                      (onPaginate)="paginar($event)"></app-pagination>
-
-      <div *ngIf="data.medicamentos.collection.data.length==0" class="text-center no-collection-div">
-        <i>Nenhum registro encontrado.</i>
+            </a>
+          </li>
+        </ul>
       </div>
+      <div class="panel-body">
+        <div class="tab-content animated fadeIn" *ngIf="!preloaderService.getPendingRequests()">
+          <app-medicamento-list-table [collection]="data.medicamentos.collection"
+                                      *ngIf="data.medicamentos.collection.meta?.pagination.total > 0">
+          </app-medicamento-list-table>
+          <app-pagination class="text-center"
+                          *ngIf="data.medicamentos.collection.length>0"
+                          [totalRegistros]="totalRegistros"
+                          [qtdPorPagina]="qtdPorPagina"
+                          (onPaginate)="paginar($event)"></app-pagination>
 
+          <div *ngIf="data.medicamentos.collection.data.length==0" class="text-center no-collection-div">
+            <i>Nenhum registro encontrado.</i>
+          </div>
+        </div>
+      </div>
     </div>
-
   </div>
 </div>
 

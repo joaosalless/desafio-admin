@@ -95,17 +95,6 @@ export abstract class AbstractSearchableEntity extends AbstractEntity implements
             next: ''
           }
         },
-      },
-      config: {
-        crud: {
-          redirect: {
-            created: true,
-            updated: true,
-            deleted: false,
-            force_deleted: true,
-            restored: false,
-          }
-        }
       }
     };
   }
@@ -115,17 +104,16 @@ export abstract class AbstractSearchableEntity extends AbstractEntity implements
    */
   public resetDataItem() {
     return {
-      data: [],
+      data: {
+        id: null,
+        nome: null,
+        ggrem: null,
+        created_at: null,
+        deleted_at: null,
+        updated_at: null,
+      },
       config: {
-        showHistory: false,
-        crud: {
-          redirect: {
-            created: true,
-            updated: true,
-            force_deleted: true,
-            restored: true,
-          }
-        }
+        showHistory: false
       },
     };
   }

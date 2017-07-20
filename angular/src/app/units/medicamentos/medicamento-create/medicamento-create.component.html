@@ -1,74 +1,36 @@
-<preloader></preloader>
-<notification></notification>
 
-<form #f="ngForm" (ngChange)="onChange(f)" (ngSubmit)="onSubmit(f)" autocomplete="off">
-  <div class="row header-row">
-    <div class="col-xs-12 col-lg-6 no-padding">
-      <h2 class="title">{{ dataService.getPage().title }}</h2>
-    </div>
-    <div class="col-xs-9 col-lg-3" *ngIf="!preloaderService.getPendingRequests()">
-      <button type="button" class="btn btn-block btn-default" (click)="cancel()">
-        {{ 'ACTIONS.CANCEL' | translate }}
-      </button>
-    </div>
-    <div class="col-xs-9 col-lg-3 no-padding" *ngIf="!preloaderService.getPendingRequests()">
-      <button type="submit" class="btn btn-block btn-primary"
-              [disabled]="!f.valid"
-              *ngIf="!data.medicamentos.item.data.deleted_at">
-        {{ 'ACTIONS.SAVE' | translate }}
-      </button>
-    </div>
-    <div class="col-xs-9 col-lg-3 no-padding" *ngIf="!preloaderService.getPendingRequests()">
-      <button type="button" class="btn btn-block btn-success"
-              *ngIf="data.medicamentos.item.data.deleted_at"
-              (click)="dataService.restoreItem(data.medicamentos.item.data.id)">
-        {{ 'ACTIONS.RESTORE' | translate }}
-      </button>
-    </div>
-  </div>
+<app-page-title></app-page-title>
 
-  <hr>
-
-  <div class="row collection-row" *ngIf="data.medicamentos.item.data">
-    <div class="col-md-12">
-      <div class="tab-content animated fadeIn" *ngIf="!preloaderService.getPendingRequests()">
-        <app-medicamento-form [item]="data.medicamentos.item.data"></app-medicamento-form>
+<div class="row" *ngIf="!preloaderService.getPendingRequests()">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body border-bottom">
+        <form #f="ngForm" (ngChange)="onChange(f)" (ngSubmit)="onSubmit(f)" autocomplete="off">
+          <div class="row">
+            <div class="col-xs-12 col-lg-6">
+              <h3 class="no-margin">{{ dataService.getPage().title }}</h3>
+            </div>
+            <div class="col-xs-9 col-lg-3" *ngIf="!preloaderService.getPendingRequests()">
+              <button type="button" class="btn btn-block btn-default" (click)="cancel()">
+                {{ 'ACTIONS.CANCEL' | translate }}
+              </button>
+            </div>
+            <div class="col-xs-9 col-lg-3" *ngIf="!preloaderService.getPendingRequests()">
+              <button type="submit" class="btn btn-block btn-primary" [disabled]="!f.valid">
+                {{ 'ACTIONS.SAVE' | translate }}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-    </div>
-  </div>
-</form>
-
-<div class="row" *ngIf="data.medicamentos.item.data">
-  <div class="col-md-12">
-    <div class="tab-content animated fadeIn" *ngIf="!preloaderService.getPendingRequests()">
-
-      <div class="panel panel-default margin-top">
-
-        <div class="panel-body">
-          <button class="btn btn-default" (click)="dataService.toggleHistoryShowHistory()"
-                  *ngIf="!dataService.config.system.app.crud.showHistory">
-            <span *ngIf="!dataService.getItemConfig().showHistory">
-            {{ 'ACTIONS.SHOW_HISTORY' | translate }}
-            <span *ngIf="data.medicamentos.item.data.history">
-              ({{ data.medicamentos.item.data.history.data.length }} alterações)
-            </span>
-            </span>
-            <span *ngIf="dataService.getItemConfig().showHistory">
-              {{ 'ACTIONS.HIDE_HISTORY' | translate }}
-            </span>
-          </button>
+      <div class="panel-body">
+        <div class="tab-content" *ngIf="!preloaderService.getPendingRequests()">
+          <app-medicamento-form [item]="dataService.data.medicamentos.item.data"></app-medicamento-form>
         </div>
-
-        <div class="panel-body border-top no-padding-vertical" *ngIf="dataService.getItemConfig().showHistory">
-          <app-medicamento-history [item]="data.medicamentos.item.data">
-          </app-medicamento-history>
-        </div>
-
       </div>
-
     </div>
   </div>
 </div>
 
-<app-debug-data></app-debug-data>
+<app-debug-data *ngIf="!preloaderService.getPendingRequests()"></app-debug-data>
 

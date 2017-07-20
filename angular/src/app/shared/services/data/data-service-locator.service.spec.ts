@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { DataServiceLocatorService } from './data-service-locator.service';
+import { DataEntityServiceLocatorService } from './data-entity-service-locator.service';
 
-describe('DataServiceLocatorService', () => {
+describe('DataEntityServiceLocatorService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DataServiceLocatorService]
+      providers: [DataEntityServiceLocatorService]
     });
   });
 
-  it('should be created', inject([DataServiceLocatorService], (service: DataServiceLocatorService) => {
+  it('should be created', inject([DataEntityServiceLocatorService], (service: DataEntityServiceLocatorService) => {
     expect(service).toBeTruthy();
   }));
 });

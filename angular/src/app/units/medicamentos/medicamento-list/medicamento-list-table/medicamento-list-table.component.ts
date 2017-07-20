@@ -3,6 +3,7 @@ import { PreloaderService } from '../../../../shared/components/preloader/preloa
 import { TranslateService } from '@ngx-translate/core';
 import { DataService } from '../../../../shared/services/data/data.service';
 import { ConfigService } from '@ngx-config/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-medicamento-list-table',
@@ -16,11 +17,19 @@ export class MedicamentoListTableComponent implements OnInit {
   constructor(protected readonly configService: ConfigService,
               protected readonly translate: TranslateService,
               public dataService: DataService,
-              protected preloaderService: PreloaderService) {
+              protected preloaderService: PreloaderService,
+              protected route: ActivatedRoute,
+              protected router: Router) {
   }
 
   ngOnInit() {
 
+  }
+
+  editItem(id) {
+    this.dataService.getItem(id);
+    this.router.navigate(['/medicamentos', id])
+    this.dataService.setView('edit');
   }
 
   removeItem(id: any) {

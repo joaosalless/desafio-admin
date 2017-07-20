@@ -1,6 +1,6 @@
 <div class="form-group" [ngClass]="{
       'has-error': dataService.getItemHasErrors('nome')}">
-  <label class="control-label" for="nome">{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}</label>
+  <label class="control-label" for="nome">{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}</label>
   <input type="text"
          class="form-control"
          id="nome"
@@ -9,9 +9,7 @@
          [disabled]="item.deleted_at"
          aria-describedby="nomeHelpBlock"
          placeholder="{{ 'DOMAINS.MEDICAMENTO.NOME' | translate }}">
-  <span class="form-control-feedback"
-        aria-hidden="true"
-        [ngClass]="{'fa fa-times': dataService.getItemHasErrors('nome')}"></span>
+  <span class="form-control-feedback" aria-hidden="true"></span>
   <span id="nomeHelpBlock" class="help-block" *ngIf="dataService.getItemHasErrors('nome')">
       {{ dataService.getItemFieldErrors('nome')[0] }}</span>
 </div>
@@ -27,9 +25,7 @@
          [disabled]="item.deleted_at"
          aria-describedby="ggremHelpBlock"
          placeholder="{{ 'DOMAINS.MEDICAMENTO.GGREM' | translate }}">
-  <span class="form-control-feedback"
-        aria-hidden="true"
-        [ngClass]="{'fa fa-times': dataService.getItemHasErrors('ggrem')}"></span>
+  <span class="form-control-feedback" aria-hidden="true" ></span>
   <span id="ggremHelpBlock" class="help-block" *ngIf="dataService.getItemHasErrors('ggrem')">
       {{ dataService.getItemFieldErrors('ggrem')[0] }}</span>
 </div>

@@ -82,10 +82,10 @@ abstract class Controller extends BaseController
             return $this->response($response);
         }
 
-        $medicamento = $this->repository->create($data);
+        $medicamento = $this->repository->skipPresenter(true)->create($data);
 
         if ($medicamento) {
-            $medicamento = $this->repository->with($this->getRelations('item'))->find($id);
+            $medicamento = $this->repository->skipPresenter(false)->with($this->getRelations('item'))->find($medicamento->id);
             $response = $this->setResponseData([
                 'success' => true,
                 'status'  => HttpResponseCodes::HTTP_CREATED,

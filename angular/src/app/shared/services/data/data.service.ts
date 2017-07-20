@@ -17,7 +17,6 @@ import { QueryBuilder } from '../../../domains/abstract/query-builder';
 import { SearchableEntity } from '../../../domains/abstract/searchable-entity';
 import { PreloaderService } from '../../components/preloader/preloader.service';
 import { NotificationService } from '../../components/notification/notification.service';
-import { SearchableEntityDataInterface } from '../../../domains/abstract/searchable-entity-data-interface';
 import { SearchableEntityFilterService } from './searchable-entity-filter.service';
 import { DataEntityServiceLocatorService } from './data-entity-service-locator.service';
 import { ApiResponseInterface } from '../http/api-response-interface';
@@ -34,6 +33,7 @@ export class DataService {
    * Dados globais
    */
   public data: any = {
+    view: 'list',
     page: new Page(),
     endpoint: '',
     queryBuilder: {},
@@ -179,7 +179,8 @@ export class DataService {
   }
 
   /**
-   * Retorna os dados da página
+   * Retorna a página atual
+   *
    * @return {Page}
    */
   getPage() {
@@ -187,13 +188,22 @@ export class DataService {
   }
 
   /**
-   * Recupera configuração a partir da chave informada
+   * Retorna a view atual
    *
-   * @param key
-   * @return {any}
+   * @return {Page}
    */
-  getData(key: any): any {
-    return this.data[key];
+  getView() {
+    return this.data.view;
+  }
+
+  /**
+   * Muda a View atual
+   *
+   * @param view
+   * @return {DataService}
+   */
+  setView(view: any) {
+    this.data.view = view;
   }
 
   /**
@@ -205,17 +215,6 @@ export class DataService {
       data: this.data,
       config: this.config,
     });
-  }
-
-  /**
-   * Atualiza o filtro de busca de acordo com os parâmetros recebidos da URL.
-   */
-  setSearchParams() {
-    for (let param of this.searchFilter.getFields()) {
-      this.setFilterParamByQueryParam(param);
-      this.data.searchParams.set(param, this.searchFilter[param].toString());
-    }
-    return this;
   }
 
   /**
@@ -291,6 +290,7 @@ export class DataService {
     if (condition) {
       this.toggleTrashed(!this.searchFilter['onlyTrashed']);
     }
+    return this;
   }
 
   /**
@@ -326,7 +326,7 @@ export class DataService {
    * @param route: Array
    */
   navigateToRoute(route: any[]) {
-    this.router.navigate(route);
+    return this.router.navigate(route);
   }
 
   /**
@@ -348,7 +348,7 @@ export class DataService {
   /**
    * Retorna configurações da coleção atual
    */
-  getCollectionConfig(): any {
+  getDomainConfig(): any {
     return this.configService.getSettings(`collections.${this.getEndPoint()}`);
   }
 
@@ -399,7 +399,7 @@ export class DataService {
    * Reinicia as propriedades de uma collection em data.{collection}
    */
   public resetDataCollection() {
-    this.data[this.getEndPoint()].collection = this.getEntity().resetDataCollection();
+    Object.assign(this.data[this.getEndPoint()].collection, this.getEntity().resetDataCollection());
     return this;
   }
 
@@ -407,7 +407,18 @@ export class DataService {
    * Reinicia as propriedades de um item em data.{item}
    */
   public resetDataItem() {
-    this.data[this.getEndPoint()].item = this.getEntity().resetDataItem();
+    Object.assign(this.data[this.getEndPoint()].item, this.getEntity().resetDataItem());
+    return this;
+  }
+
+  /**
+   * Atualiza o filtro de busca de acordo com os parâmetros recebidos da URL.
+   */
+  setSearchParams() {
+    for (let param of this.searchFilter.getFields()) {
+      this.setFilterParamByQueryParam(param);
+      this.data.searchParams.set(param, this.searchFilter[param].toString());
+    }
     return this;
   }
 
@@ -417,6 +428,16 @@ export class DataService {
   private prepareCollectionQuery() {
     Object.assign(this.data.queryBuilder, {
       include: this.data[this.getEndPoint()].entity.getCollectionTransformers()
+    });
+    return this;
+  }
+
+  /**
+   * Prepara a propriedade data.queryBuilder para requisição de um Item
+   */
+  private prepareItemQuery() {
+    Object.assign(this.data.queryBuilder, {
+      include: this.data[this.getEndPoint()].entity.getItemTransformers()
     });
     return this;
   }
@@ -452,8 +473,8 @@ export class DataService {
       .init(this.getCollectionQueryBuilder())
       .list(this.data.searchParams)
       .then((res) => {
-        this.setDataApiResponse(res);
-        Object.assign(this.data[this.getEndPoint()].collection, res);
+        this.setDataCollectionResponse(res);
+
         this.debug();
       })
       .catch((error) => {
@@ -468,14 +489,14 @@ export class DataService {
    * @param id: any
    */
   getItem(id: any) {
+    this.prepareItemQuery();
+    this.setSearchParams();
     this.apiService
       .init(this.getItemQueryBuilder())
       .show(id)
       .then((res) => {
-        this.setDataApiResponse(res);
-        this.resetDataItem();
-        Object.assign(this.data[this.getEndPoint()].item, res);
-        this.debug();
+        this.resetDataItem()
+          .setDataItemApiResponse(res);
       })
       .catch((error) => {
         this.logger.error(error)
@@ -488,7 +509,7 @@ export class DataService {
    *
    * @param item
    */
-  saveItem(item?: SearchableEntityDataInterface) {
+  saveItem(item?: any) {
     if (!item) {
       item = this.getItemData();
     }
@@ -496,11 +517,9 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .post(item)
       .then((res) => {
-        this.setDataApiResponse(res);
-        Object.assign(this.data[this.getEndPoint()].item, res);
-        this.checkIfRedirect('create');
-        this.notifyFromApiResponse(res);
-        this.debug();
+        this.setDataItemApiResponse(res)
+          .notifyFromApiResponse(res)
+          .checkAndChangeView('create');
       })
       .catch((error) => {
         this.logger.error(error)
@@ -514,7 +533,7 @@ export class DataService {
    * @param id
    * @param item
    */
-  updateItem(id?: any, item?: SearchableEntityDataInterface) {
+  updateItem(id?: any, item?: any) {
     if (!item) {
       item = this.getItemData();
     }
@@ -522,9 +541,10 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .update(item.id, item)
       .then((res) => {
-        this.setDataApiResponse(res);
-        Object.assign(this.data[this.getEndPoint()].item, res);
-        this.checkIfRedirect('update');
+        this.getItem(item.id);
+        this.setDataItemApiResponse(res);
+        this.setView('list');
+        this.getCollection();
         this.notifyFromApiResponse(res);
       })
       .catch((error) => {
@@ -543,12 +563,12 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .remove(id)
       .then((res) => {
-        this.setDataApiResponse(res);
-        this.resetDataItem();
-        this.checkIfRedirect('delete');
-        this.getCollection();
-        this.notifyFromApiResponse(res);
-        this.debug();
+        this.resetDataItem()
+          .toggleTrashedByCollectionDataLength()
+          .getCollection()
+          .setDataCollectionResponse(res)
+          .notifyFromApiResponse(res)
+          .checkAndChangeView('delete');
       })
       .catch((error) => {
         this.logger.error(error)
@@ -566,12 +586,13 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .restore(id)
       .then((res) => {
-        this.setDataApiResponse(res);
-        this.getItem(id);
+        this.resetDataItem();
+        this.setDataItemApiResponse(res);
+        this.toggleTrashedByCollectionDataLength();
         this.getCollection();
+        this.checkAndChangeView('restore');
+        this.setDataCollectionResponse(res);
         this.notifyFromApiResponse(res);
-        this.checkIfRedirect('restore', res);
-        this.debug();
       })
       .catch((error) => {
         this.logger.error(error)
@@ -589,13 +610,11 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .forceRemove(id)
       .then((res) => {
-        this.setDataApiResponse(res);
-        this.resetDataItem();
-        this.toggleTrashedByCollectionDataLength();
-        this.getCollection();
-        this.notifyFromApiResponse(res);
-        this.checkIfRedirect('force_delete');
-        this.debug();
+        this.toggleTrashedByCollectionDataLength()
+          .getCollection()
+          .setDataItemApiResponse(res)
+          .notifyFromApiResponse(res)
+          .checkAndChangeView('force_delete');
       })
       .catch((error) => {
         this.logger.error(error)
@@ -604,11 +623,24 @@ export class DataService {
   }
 
   /**
-   * Atualiza this.data.apiResponse a partir da resposta da API
+   * Atualiza this.data.apiResponse a partir da resposta de uma consulta por um Item da API
    *
    * @param res
    */
-  setDataApiResponse(res: ApiResponseInterface) {
+  setDataItemApiResponse(res: ApiResponseInterface) {
+    this.resetDataItem();
+    Object.assign(this.data[this.getEndPoint()].item, res);
+    Object.assign(this.apiResponse, res);
+    return this;
+  }
+
+  /**
+   * Atualiza this.data.apiResponse a partir da resposta de uma consulta por uma coleção da API
+   *
+   * @param res
+   */
+  setDataCollectionResponse(res: ApiResponseInterface) {
+    Object.assign(this.data[this.getEndPoint()].collection, res);
     Object.assign(this.apiResponse, res);
     return this;
   }
@@ -625,17 +657,17 @@ export class DataService {
       this.notificationService.showSuccess(res.message);
     }
     this.debug();
+    return this;
   }
 
   /**
-   * Verifica se será feito redirecionamento de rota após operações crud
+   * Verifica se será mudada e muda a view após operações crud
    */
-  checkIfRedirect(operation: any, res?: ApiResponseInterface) {
-    if (this.config.system.app.crud.redirect[operation]) {
-      if (operation === 'restore') {
-        this.navigateToRoute(['/', this.getEndPoint(), this.getItemData().id]);
-      }
-      this.navigateToRoute(['/', this.getEndPoint()]);
+  checkAndChangeView(operation: any, res?: ApiResponseInterface) {
+    let view = this.config.system.app.crud.switchViewOnAction[operation];
+    if (view) {
+      this.setView(view);
     }
+    return this;
   }
 }

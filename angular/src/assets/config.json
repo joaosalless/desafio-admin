@@ -1,17 +1,26 @@
 {
   "system": {
     "app": {
-      "id": "desafio-admin",
+      "id": "DESAFIO-ADMIN",
       "name": "Desafio do Admin - Memed",
       "url": "http://localhost:8000",
       "search": {
         "updateUrl": true
       },
       "crud": {
-        "redirect": {
-          "create": false,
-          "update": false,
-          "restore": true
+        "switchViewOnAction": {
+          "create": "list",
+          "update": "edit",
+          "delete": "list",
+          "restore": "list",
+          "force_delete": "list"
+        },
+        "redirectOnAction": {
+          "create": "true",
+          "update": "true",
+          "delete": "true",
+          "restore": "true",
+          "force_delete": "true"
         }
       }
     },
@@ -21,7 +30,7 @@
     },
     "debug": {
       "enabled": true,
-      "showDebugView": true,
+      "showDebugView": false,
       "logOnConsole": true,
       "logOnServer": false,
       "serverLogUrl": null,

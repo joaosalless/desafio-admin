@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { ToastsManager } from 'ng2-toastr';
   styleUrls: ['./medicamento-edit.component.scss'],
   providers: [DataService]
 })
-export class MedicamentoEditComponent implements OnInit {
+export class MedicamentoEditComponent implements OnInit, OnDestroy {
 
   /**
    * Configurações globais
@@ -25,6 +25,8 @@ export class MedicamentoEditComponent implements OnInit {
    */
   public data: any = {};
 
+  id: any;
+  sub: any;
   item: any;
 
   /**
@@ -48,11 +50,14 @@ export class MedicamentoEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sub  = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    });
     this.route.params
       .subscribe((params: any) => {
         this.config = this.dataService.config;
         this.dataService.startApi('medicamentos');
-        this.item = this.dataService.data.medicamentos.item;
+        this.item = this.dataService.data.medicamentos.item.data;
         this.dataService.setPage(new Page({
           slug: 'medicamentos-edit',
           title: 'Editando Apresentações Alopáticos',
@@ -64,36 +69,30 @@ export class MedicamentoEditComponent implements OnInit {
     this.dataService.debug();
   }
 
-  /**
-   * onChange
-   */
-  onChange(form) {
-    console.log(form.value);
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   /**
    * Cancela a edição e retorna para a coleção de itens
    */
   cancel() {
+    this.dataService.setView('list');
     this.router.navigate(['/medicamentos']);
   }
 
-  onSubmit(form) {
-    event.preventDefault();
-    console.log(form.value);
+  updateItem() {
     this.dataService.updateItem();
+    this.dataService.setView('list');
+    // this.dataService.updateItem(this.data.medicamentos.item.data.deleted_at);
+    // this.router.navigate(['/medicamentos']);
+    // this.dataService.notificationService.showSuccess('Registro atualizado com sucesso.');
   }
 
-  removeItem(id: any) {
-    this.dataService.removeItem(id);
-  }
-
-  forceRemoveItem(id: any) {
-    this.dataService.forceRemoveItem(id);
-  }
-
-  restoreItem(id: any) {
-    this.dataService.restoreItem(id);
+  restoreItem(){
+    this.dataService.restoreItem(this.data.medicamentos.item.data.id);
+    this.router.navigate(['/medicamentos']);
+    this.dataService.setView('list');
   }
 
 }

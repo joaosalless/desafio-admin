@@ -5,6 +5,8 @@ import { ToastsManager } from 'ng2-toastr';
 import { PreloaderService } from '../../../shared/components/preloader/preloader.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Page } from '../../../domains/pages/page.model';
+import { QueryBuilder } from '../../../domains/abstract/query-builder';
+import { Medicamento } from '../../../domains/medicamentos/medicamento.model';
 
 @Component({
   selector: 'app-medicamento-create',
@@ -13,21 +15,17 @@ import { Page } from '../../../domains/pages/page.model';
 })
 export class MedicamentoCreateComponent implements OnInit {
 
-  /**
-   * Configurações globais
-   */
-  public config: any = {};
+  view: any = '';
+  config: any = {};
 
-  /**
-   * Dados globais
-   */
-  public data: any;
+  data: any = {};
+
+  item: Medicamento = new Medicamento();
 
   /**
    *
    * @param translate
    * @param dataService
-   * @param vcr
    * @param toastr
    * @param preloaderService
    * @param route
@@ -35,32 +33,42 @@ export class MedicamentoCreateComponent implements OnInit {
    */
   constructor(protected readonly translate: TranslateService,
               public dataService: DataService,
-              public vcr: ViewContainerRef,
               public toastr: ToastsManager,
               protected preloaderService: PreloaderService,
               protected route: ActivatedRoute,
               protected router: Router) {
-    this.toastr.setRootViewContainerRef(vcr)
   }
 
   ngOnInit() {
-    this.data = this.dataService.data;
-    this.config = this.dataService.config;
-    this.dataService.startApi('medicamentos');
-    this.dataService.resetDataItem();
-    this.dataService.setPage(new Page({
-      slug: 'medicamentos-create',
-      title: 'Criando Apresentações Alopáticos',
-    }));
+    this.route.params
+      .subscribe((params: any) => {
+        this.config = this.dataService.config;
+        this.dataService.startApi('medicamentos');
+        this.item = this.dataService.data.medicamentos.item;
+        this.dataService.setPage(new Page({
+          slug: 'medicamentos-edit',
+          title: 'Editando Apresentações Alopáticos',
+        }));
+        this.dataService.getItem(params.id);
+        this.data = this.dataService.data;
+        if (params.id) {
+          this.dataService.setView('edit');
+        }
+      });
     window.scrollTo(0, 0);
-    this.dataService.debug();
   }
 
-  /**
-   * Cancela a edição e retorna para a coleção de itens
-   */
+  onChange(form) {
+    // console.log(form.value);
+  }
+
   cancel() {
-    this.router.navigate(['/medicamentos']);
+    console.log('canceled');
+    this.dataService.setView('list');
+  }
+
+  onSubmit(form) {
+    this.dataService.saveItem();
   }
 
 }

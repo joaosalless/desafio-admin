@@ -23,6 +23,7 @@ import { NotificationService } from './components/notification/notification.serv
 import { SearchableEntityFilterService } from './services/data/searchable-entity-filter.service';
 import { DataEntityServiceLocatorService } from './services/data/data-entity-service-locator.service';
 import { DebugDataComponent } from './components/debug/debug-data/debug-data.component';
+import { PageTitleComponent } from './components/page-title/page-title.component';
 
 const DECLARATIONS_SHARED_MODULE = [
   CampoControlErroComponent,
@@ -30,6 +31,7 @@ const DECLARATIONS_SHARED_MODULE = [
   PaginationComponent,
   PreloaderComponent,
   StrReplacePipe,
+  PageTitleComponent,
 ];
 
 const SHARED_ROUTES: Routes = [];

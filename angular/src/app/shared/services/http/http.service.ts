@@ -6,7 +6,6 @@ import { isNullOrUndefined } from 'util';
 import { ConfigService } from '@ngx-config/core';
 import { QueryBuilder } from '../../../domains/abstract/query-builder';
 import { HttpRequestOptionsService } from './http-request-options.service';
-import { SearchableEntityInterface } from '../../../domains/abstract/searchable-entity-interface';
 
 @Injectable()
 export class HttpService {
@@ -56,7 +55,7 @@ export class HttpService {
       });
   }
 
-  show(id: string) {
+  show(id: string, params?: URLSearchParams) {
     let relations = this.relations ? this.relations : '';
     let url = `${this.url}/${id}/${relations}`;
     return this.http.get(url, this.requestOptions.merge(new RequestOptions()))

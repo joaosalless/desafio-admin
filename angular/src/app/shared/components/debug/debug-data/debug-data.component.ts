@@ -7,6 +7,7 @@ import { DataService } from '../../../services/data/data.service';
   styleUrls: ['./debug-data.component.scss']
 })
 export class DebugDataComponent implements OnInit {
+
   private data: any;
 
   constructor(public dataService: DataService) {
