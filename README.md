@@ -64,7 +64,7 @@ Boa sorte _and let’s code_!
 
 :m: Equipe Memed
 
-# Instruções de uso
+# Instruções de uso da Solução
 
 Faça o clone deste repositório com o comando:
 
