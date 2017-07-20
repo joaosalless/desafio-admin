@@ -84,6 +84,10 @@ composer install
 
 Execute este comando para iniciar o artisan serve que irá gerar a base de dados sqlite automaticamente, executar as migrations e os seeders.
 
+```bash
+./run-artisan-serve.sh
+```
+
 Acesse a API no endereço
 
 ```php
