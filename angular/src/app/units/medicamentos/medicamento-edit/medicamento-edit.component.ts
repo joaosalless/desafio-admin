@@ -76,4 +76,13 @@ export class MedicamentoEditComponent implements OnInit {
     this.dataService.restoreItem(this.item.data.id);
   }
 
+  /**
+   * Verifica nas configurações globais se o histórico deve ser exibido
+   *
+   * @return {any}
+   */
+  showHistory(): boolean {
+    return this.dataService.config.system.app.crud.showHistory;
+  }
+
 }

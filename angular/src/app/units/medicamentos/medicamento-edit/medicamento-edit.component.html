@@ -43,7 +43,7 @@
       </div>
       <div class="panel-body border-top" *ngIf="item.data.history">
         <button class="btn btn-default" (click)="dataService.toggleHistoryShowHistory()"
-                *ngIf="!dataService.config.system.app.crud.showHistory">
+                *ngIf="showHistory()">
             <span *ngIf="!dataService.getItemConfig().showHistory">
             {{ 'ACTIONS.SHOW_HISTORY' | translate }}
             <span>

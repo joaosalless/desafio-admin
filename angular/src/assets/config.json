@@ -8,20 +8,7 @@
         "updateUrl": true
       },
       "crud": {
-        "switchViewOnAction": {
-          "create": "list",
-          "update": "edit",
-          "delete": "list",
-          "restore": "list",
-          "force_delete": "list"
-        },
-        "redirectOnAction": {
-          "create": "true",
-          "update": "true",
-          "delete": "true",
-          "restore": "true",
-          "force_delete": "true"
-        }
+        "showHistory": true
       }
     },
     "api": {
