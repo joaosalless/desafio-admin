@@ -1634,15 +1634,6 @@ var DataService = (function () {
         return this.data.view;
     };
     /**
-     * Muda a View atual
-     *
-     * @param view
-     * @return {DataService}
-     */
-    DataService.prototype.setView = function (view) {
-        this.data.view = view;
-    };
-    /**
      * Debuga a propriedade data no console
      */
     DataService.prototype.debug = function () {
@@ -1886,8 +1877,8 @@ var DataService = (function () {
             .init(this.getCollectionQueryBuilder())
             .list(this.data.searchParams)
             .then(function (res) {
+            _this.resetDataCollection();
             _this.setDataCollectionResponse(res);
-            _this.debug();
         })
             .catch(function (error) {
             _this.logger.error(error);
@@ -1907,8 +1898,8 @@ var DataService = (function () {
             .init(this.getItemQueryBuilder())
             .show(id)
             .then(function (res) {
-            _this.resetDataItem()
-                .setDataItemApiResponse(res);
+            _this.resetDataItem();
+            _this.setDataItemApiResponse(res);
         })
             .catch(function (error) {
             _this.logger.error(error);
@@ -1929,9 +1920,8 @@ var DataService = (function () {
             .init(this.getItemQueryBuilder())
             .post(item)
             .then(function (res) {
-            _this.setDataItemApiResponse(res)
-                .notifyFromApiResponse(res)
-                .checkAndChangeView('create');
+            _this.setDataItemApiResponse(res);
+            _this.notifyFromApiResponse(res);
         })
             .catch(function (error) {
             _this.logger.error(error);
@@ -1955,7 +1945,6 @@ var DataService = (function () {
             .then(function (res) {
             _this.getItem(item.id);
             _this.setDataItemApiResponse(res);
-            _this.setView('list');
             _this.getCollection();
             _this.notifyFromApiResponse(res);
         })
@@ -1975,12 +1964,10 @@ var DataService = (function () {
             .init(this.getItemQueryBuilder())
             .remove(id)
             .then(function (res) {
-            _this.resetDataItem()
-                .toggleTrashedByCollectionDataLength()
-                .getCollection()
-                .setDataCollectionResponse(res)
-                .notifyFromApiResponse(res)
-                .checkAndChangeView('delete');
+            _this.resetDataItem();
+            _this.toggleTrashedByCollectionDataLength();
+            _this.getCollection();
+            _this.notifyFromApiResponse(res);
         })
             .catch(function (error) {
             _this.logger.error(error);
@@ -1998,12 +1985,9 @@ var DataService = (function () {
             .init(this.getItemQueryBuilder())
             .restore(id)
             .then(function (res) {
-            _this.resetDataItem();
-            _this.setDataItemApiResponse(res);
+            _this.getItem(id);
             _this.toggleTrashedByCollectionDataLength();
             _this.getCollection();
-            _this.checkAndChangeView('restore');
-            _this.setDataCollectionResponse(res);
             _this.notifyFromApiResponse(res);
         })
             .catch(function (error) {
@@ -2025,8 +2009,7 @@ var DataService = (function () {
             _this.toggleTrashedByCollectionDataLength()
                 .getCollection()
                 .setDataItemApiResponse(res)
-                .notifyFromApiResponse(res)
-                .checkAndChangeView('force_delete');
+                .notifyFromApiResponse(res);
         })
             .catch(function (error) {
             _this.logger.error(error);
@@ -2055,7 +2038,7 @@ var DataService = (function () {
         return this;
     };
     /**
-     * Atualiza this.data.{endpoint}.item a partir da resposta da API
+     * Exibe notificações a partir da resposta da API
      *
      * @param res
      */
@@ -2067,16 +2050,6 @@ var DataService = (function () {
             this.notificationService.showSuccess(res.message);
         }
         this.debug();
-        return this;
-    };
-    /**
-     * Verifica se será mudada e muda a view após operações crud
-     */
-    DataService.prototype.checkAndChangeView = function (operation, res) {
-        var view = this.config.system.app.crud.switchViewOnAction[operation];
-        if (view) {
-            this.setView(view);
-        }
         return this;
     };
     return DataService;
