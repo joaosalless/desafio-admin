@@ -11,9 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+$spaRoutes = [
+    '/',
+    '/medicamentos',
+    '/medicamentos/{id}',
+];
+
+foreach ($spaRoutes as $route) {
+    Route::get($route, function () { return view('index'); });
+}
 
 Route::get('/docs', function () {
     return view('docs');

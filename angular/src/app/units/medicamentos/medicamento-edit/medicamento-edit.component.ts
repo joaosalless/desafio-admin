@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { ToastsManager } from 'ng2-toastr';
   styleUrls: ['./medicamento-edit.component.scss'],
   providers: [DataService]
 })
-export class MedicamentoEditComponent implements OnInit, OnDestroy {
+export class MedicamentoEditComponent implements OnInit {
 
   /**
    * Configurações globais
@@ -25,8 +25,9 @@ export class MedicamentoEditComponent implements OnInit, OnDestroy {
    */
   public data: any = {};
 
-  id: any;
-  sub: any;
+  /**
+   * Medicamento selecionado para edição
+   */
   item: any;
 
   /**
@@ -50,26 +51,19 @@ export class MedicamentoEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      this.id = +params['id'];
-    });
     this.route.params.subscribe((params: any) => {
       this.config = this.dataService.config;
       this.dataService.startApi('medicamentos');
       this.item = this.dataService.data.medicamentos.item.data;
+      this.data = this.dataService.data;
+      this.dataService.getItem(params.id);
       this.dataService.setPage(new Page({
         slug: 'medicamentos-edit',
         title: 'Editando Apresentações Alopáticos',
       }));
-      this.dataService.getItem(params.id);
-      this.data = this.dataService.data;
     });
     window.scrollTo(0, 0);
     this.dataService.debug();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   /**
@@ -87,7 +81,6 @@ export class MedicamentoEditComponent implements OnInit, OnDestroy {
   updateItem() {
     this.dataService.updateItem();
     this.router.navigate(['/medicamentos']);
-    // this.dataService.notificationService.showSuccess('Registro atualizado com sucesso.');
   }
 
   /**
@@ -96,7 +89,6 @@ export class MedicamentoEditComponent implements OnInit, OnDestroy {
   restoreItem() {
     this.dataService.restoreItem(this.data.medicamentos.item.data.id);
     this.router.navigate(['/medicamentos']);
-    this.dataService.setView('list');
   }
 
 }
