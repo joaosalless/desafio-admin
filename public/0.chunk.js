@@ -3,7 +3,7 @@ webpackJsonp([0],{
 /***/ "../../../../../src/app/units/medicamentos/medicamento-create/medicamento-create.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<preloader></preloader>\n<notification></notification>\n\n<h1>Não implementado ainda.</h1>\n"
+module.exports = "<preloader></preloader>\n<notification></notification>\n\n<app-page-title></app-page-title>\n\n<div class=\"row\" *ngIf=\"!preloaderService.getPendingRequests()\">\n  <div class=\"col-sm-12\">\n    <div class=\"panel panel-default\">\n      <div class=\"panel-body border-bottom\">\n        <form #f=\"ngForm\" (ngChange)=\"onChange(f)\" (ngSubmit)=\"onSubmit(f)\" autocomplete=\"off\">\n          <div class=\"row\">\n            <div class=\"col-xs-12 col-lg-6\">\n              <h3 class=\"no-margin\">{{ dataService.getPage().title }}</h3>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <a [routerLink]=\"['/']\" class=\"btn btn-block btn-default\">\n                {{ 'ACTIONS.CANCEL' | translate }}\n              </a>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-primary\"\n                      [disabled]=\"!f.valid\"\n                      (click)=\"saveItem()\"\n                      *ngIf=\"!item.data.deleted_at\">\n                {{ 'ACTIONS.SAVE' | translate }}\n              </button>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-success\"\n                      *ngIf=\"item.data.deleted_at\"\n                      (click)=\"restoreItem()\">\n                {{ 'ACTIONS.RESTORE' | translate }}\n              </button>\n            </div>\n          </div>\n        </form>\n      </div>\n      <div class=\"panel-body border-top\">\n        <div class=\"tab-content\" *ngIf=\"!preloaderService.getPendingRequests()\">\n          <app-medicamento-form [item]=\"item.data\"></app-medicamento-form>\n        </div>\n      </div>\n      <div class=\"panel-body border-top\" *ngIf=\"item.data.history\">\n        <button class=\"btn btn-default\" (click)=\"dataService.toggleHistoryShowHistory()\"\n                *ngIf=\"!dataService.config.system.app.crud.showHistory\">\n            <span *ngIf=\"!dataService.getItemConfig().showHistory\">\n            {{ 'ACTIONS.SHOW_HISTORY' | translate }}\n            <span>\n              ({{ item.data.history.data.length }} alterações)\n            </span>\n            </span>\n          <span *ngIf=\"dataService.getItemConfig().showHistory\">\n              {{ 'ACTIONS.HIDE_HISTORY' | translate }}\n            </span>\n        </button>\n      </div>\n      <div class=\"panel-body border-top\" *ngIf=\"dataService.getItemConfig().showHistory\">\n        <h4 class=\"no-margin\">Histórico</h4>\n      </div>\n      <div class=\"panel-body no-padding-top\" *ngIf=\"dataService.getItemConfig().showHistory\">\n        <app-medicamento-history [item]=\"item.data\">\n        </app-medicamento-history>\n      </div>\n    </div>\n  </div>\n</div>\n\n<app-debug-data *ngIf=\"!preloaderService.getPendingRequests()\"></app-debug-data>\n\n"
 
 /***/ }),
 
@@ -30,6 +30,13 @@ module.exports = module.exports.toString();
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__domains_pages_page_model__ = __webpack_require__("../../../../../src/app/domains/pages/page.model.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ngx_translate_core__ = __webpack_require__("../../../../@ngx-translate/core/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_services_data_data_service__ = __webpack_require__("../../../../../src/app/shared/services/data/data.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng2_toastr__ = __webpack_require__("../../../../ng2-toastr/ng2-toastr.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng2_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_ng2_toastr__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_components_preloader_preloader_service__ = __webpack_require__("../../../../../src/app/shared/components/preloader/preloader.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MedicamentoCreateComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -41,12 +48,58 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+
+
+
+
 var MedicamentoCreateComponent = (function () {
-    function MedicamentoCreateComponent() {
+    /**
+     *
+     * @param translate
+     * @param dataService
+     * @param vcr
+     * @param toastr
+     * @param preloaderService
+     * @param route
+     * @param router
+     */
+    function MedicamentoCreateComponent(translate, dataService, vcr, toastr, preloaderService, route, router) {
+        this.translate = translate;
+        this.dataService = dataService;
+        this.vcr = vcr;
+        this.toastr = toastr;
+        this.preloaderService = preloaderService;
+        this.route = route;
+        this.router = router;
+        /**
+         * Configurações globais
+         */
+        this.config = {};
+        /**
+         * Dados globais
+         */
+        this.data = {};
+        this.toastr.setRootViewContainerRef(vcr);
     }
     MedicamentoCreateComponent.prototype.ngOnInit = function () {
+        this.config = this.dataService.config;
+        this.dataService.startApi('medicamentos');
+        this.item = this.dataService.data.medicamentos.item;
+        this.dataService.setPage(new __WEBPACK_IMPORTED_MODULE_1__domains_pages_page_model__["a" /* Page */]({
+            slug: 'medicamentos-create',
+            title: 'Criando Apresentações Alopáticos',
+        }));
+        window.scrollTo(0, 0);
+        this.dataService.debug();
     };
+    /**
+     * Salva o item na API
+     */
     MedicamentoCreateComponent.prototype.saveItem = function () {
+        this.dataService.saveItem();
+        this.router.navigate(['/medicamentos']);
     };
     return MedicamentoCreateComponent;
 }());
@@ -56,9 +109,10 @@ MedicamentoCreateComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-create/medicamento-create.component.html"),
         styles: [__webpack_require__("../../../../../src/app/units/medicamentos/medicamento-create/medicamento-create.component.scss")]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__ngx_translate_core__["c" /* TranslateService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ngx_translate_core__["c" /* TranslateService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__shared_services_data_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__shared_services_data_data_service__["a" /* DataService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4_ng2_toastr__["ToastsManager"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ng2_toastr__["ToastsManager"]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5__shared_components_preloader_preloader_service__["a" /* PreloaderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__shared_components_preloader_preloader_service__["a" /* PreloaderService */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_6__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_router__["b" /* ActivatedRoute */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_router__["c" /* Router */]) === "function" && _g || Object])
 ], MedicamentoCreateComponent);
 
+var _a, _b, _c, _d, _e, _f, _g;
 //# sourceMappingURL=medicamento-create.component.js.map
 
 /***/ }),
@@ -148,25 +202,19 @@ var MedicamentoEditComponent = (function () {
     }
     MedicamentoEditComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.sub = this.route.params.subscribe(function (params) {
-            _this.id = +params['id'];
-        });
         this.route.params.subscribe(function (params) {
             _this.config = _this.dataService.config;
             _this.dataService.startApi('medicamentos');
             _this.item = _this.dataService.data.medicamentos.item.data;
+            _this.data = _this.dataService.data;
+            _this.dataService.getItem(params.id);
             _this.dataService.setPage(new __WEBPACK_IMPORTED_MODULE_3__domains_pages_page_model__["a" /* Page */]({
                 slug: 'medicamentos-edit',
                 title: 'Editando Apresentações Alopáticos',
             }));
-            _this.dataService.getItem(params.id);
-            _this.data = _this.dataService.data;
         });
         window.scrollTo(0, 0);
         this.dataService.debug();
-    };
-    MedicamentoEditComponent.prototype.ngOnDestroy = function () {
-        this.sub.unsubscribe();
     };
     /**
      * Cancela a edição e retorna para a coleção de itens
@@ -182,7 +230,6 @@ var MedicamentoEditComponent = (function () {
     MedicamentoEditComponent.prototype.updateItem = function () {
         this.dataService.updateItem();
         this.router.navigate(['/medicamentos']);
-        // this.dataService.notificationService.showSuccess('Registro atualizado com sucesso.');
     };
     /**
      * Restaura o item excluido
@@ -190,7 +237,6 @@ var MedicamentoEditComponent = (function () {
     MedicamentoEditComponent.prototype.restoreItem = function () {
         this.dataService.restoreItem(this.data.medicamentos.item.data.id);
         this.router.navigate(['/medicamentos']);
-        this.dataService.setView('list');
     };
     return MedicamentoEditComponent;
 }());
@@ -445,7 +491,7 @@ var _a, _b, _c, _d, _e, _f;
 /***/ "../../../../../src/app/units/medicamentos/medicamento-list/medicamento-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<preloader></preloader>\n<notification></notification>\n\n<app-page-title></app-page-title>\n\n<div class=\"row\" *ngIf=\"!preloaderService.getPendingRequests()\">\n  <div class=\"col-sm-12\">\n    <div class=\"panel panel-default\">\n      <div class=\"panel-body border-bottom\">\n        <div class=\"col-xs-12 col-lg-6\">\n          <h3 class=\"no-margin\">{{ dataService.getPage().title }}</h3>\n        </div>\n        <div class=\"col-xs-9 col-lg-4\">\n          <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\" autocomplete=\"off\">\n            <input type=\"text\"\n                   [(ngModel)]=\"dataService.searchFilter.search\"\n                   (keyup)=\"dataService.onFilterChange($event)\"\n                   name=\"search\"\n                   class=\"form-control\"\n                   placeholder=\"Pesquisar...\">\n          </form>\n        </div>\n        <div class=\"col-xs-3 col-lg-2 no-padding\">\n\n          <button class=\"btn btn-primary btn-block pull-right\"\n                  (click)=\"none\">Cadastrar</button>\n        </div>\n      </div>\n      <div class=\"panel-body border-bottom\">\n        <ul class=\"nav nav-tabs\" role=\"tablist\">\n          <li role=\"presentation\" [ngClass]=\"{'active': !dataService.searchFilter.onlyTrashed}\">\n            <a href=\"#active\" aria-controls=\"active\" role=\"tab\" data-toggle=\"tab\"\n               (click)=\"dataService.toggleTrashed(false, $event)\">\n              {{ 'DOMAINS.ACTIVE_PLURAL' | translate }}\n              <span *ngIf=\"!dataService.searchFilter.onlyTrashed\">\n            <span>\n              ({{ data.medicamentos.collection.data.length }})\n            </span>\n          </span>\n            </a>\n          </li>\n          <li role=\"presentation\" [ngClass]=\"{'active': dataService.searchFilter.onlyTrashed}\">\n            <a href=\"#trashed\" aria-controls=\"trashed\" role=\"tab\" data-toggle=\"tab\"\n               (click)=\"dataService.toggleTrashed(true, $event)\">\n              {{ 'DOMAINS.TRASHED_PLURAL' | translate }}\n              <span *ngIf=\"dataService.searchFilter.onlyTrashed\">\n            <span *ngIf=\"!preloaderService.getPendingRequests()\">\n              ({{ data.medicamentos.collection.data.length }})\n            </span>\n          </span>\n            </a>\n          </li>\n        </ul>\n      </div>\n\n      <div [ngSwitch]=\"dataService.data.view\">\n        <div class=\"panel-body\" *ngSwitchCase=\"'create'\">\n          <app-medicamento-create></app-medicamento-create>\n        </div>\n        <div class=\"panel-body\" *ngSwitchDefault>\n          <div class=\"tab-content\">\n            <app-medicamento-list-table [collection]=\"data.medicamentos.collection\"\n                                        *ngIf=\"data.medicamentos.collection.meta?.pagination.total > 0\">\n            </app-medicamento-list-table>\n            <app-pagination class=\"text-center\"\n                            *ngIf=\"data.medicamentos.collection.length>0\"\n                            [totalRegistros]=\"totalRegistros\"\n                            [qtdPorPagina]=\"qtdPorPagina\"\n                            (onPaginate)=\"paginar($event)\"></app-pagination>\n\n            <div *ngIf=\"data.medicamentos.collection.data.length==0\" class=\"text-center no-collection-div\">\n              <i>Nenhum registro encontrado.</i>\n            </div>\n          </div>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n"
+module.exports = "<preloader></preloader>\n<notification></notification>\n\n<app-page-title></app-page-title>\n\n<div class=\"row\" *ngIf=\"!preloaderService.getPendingRequests()\">\n  <div class=\"col-sm-12\">\n    <div class=\"panel panel-default\">\n      <div class=\"panel-body border-bottom\">\n        <div class=\"col-xs-12 col-lg-6\">\n          <h3 class=\"no-margin\">{{ dataService.getPage().title }}</h3>\n        </div>\n        <div class=\"col-xs-9 col-lg-4\">\n          <form #f=\"ngForm\" (ngSubmit)=\"onSubmit(f)\" autocomplete=\"off\">\n            <input type=\"text\"\n                   [(ngModel)]=\"dataService.searchFilter.search\"\n                   (keyup)=\"dataService.onFilterChange($event)\"\n                   name=\"search\"\n                   class=\"form-control\"\n                   placeholder=\"Pesquisar...\">\n          </form>\n        </div>\n        <div class=\"col-xs-3 col-lg-2 no-padding\">\n\n          <button class=\"btn btn-primary btn-block pull-right\"\n                  (click)=\"createItem()\">Cadastrar</button>\n        </div>\n      </div>\n      <div class=\"panel-body border-bottom\">\n        <ul class=\"nav nav-tabs\" role=\"tablist\">\n          <li role=\"presentation\" [ngClass]=\"{'active': !dataService.searchFilter.onlyTrashed}\">\n            <a href=\"#active\" aria-controls=\"active\" role=\"tab\" data-toggle=\"tab\"\n               (click)=\"dataService.toggleTrashed(false, $event)\">\n              {{ 'DOMAINS.ACTIVE_PLURAL' | translate }}\n              <span *ngIf=\"!dataService.searchFilter.onlyTrashed\">\n            <span>\n              ({{ data.medicamentos.collection.data.length }})\n            </span>\n          </span>\n            </a>\n          </li>\n          <li role=\"presentation\" [ngClass]=\"{'active': dataService.searchFilter.onlyTrashed}\">\n            <a href=\"#trashed\" aria-controls=\"trashed\" role=\"tab\" data-toggle=\"tab\"\n               (click)=\"dataService.toggleTrashed(true, $event)\">\n              {{ 'DOMAINS.TRASHED_PLURAL' | translate }}\n              <span *ngIf=\"dataService.searchFilter.onlyTrashed\">\n            <span *ngIf=\"!preloaderService.getPendingRequests()\">\n              ({{ data.medicamentos.collection.data.length }})\n            </span>\n          </span>\n            </a>\n          </li>\n        </ul>\n      </div>\n\n      <div class=\"panel-body\">\n        <div class=\"tab-content\">\n          <app-medicamento-list-table [collection]=\"data.medicamentos.collection\"\n                                      *ngIf=\"data.medicamentos.collection.meta?.pagination.total > 0\">\n          </app-medicamento-list-table>\n          <app-pagination class=\"text-center\"\n                          *ngIf=\"data.medicamentos.collection.length>0\"\n                          [totalRegistros]=\"totalRegistros\"\n                          [qtdPorPagina]=\"qtdPorPagina\"\n                          (onPaginate)=\"paginar($event)\"></app-pagination>\n\n          <div *ngIf=\"data.medicamentos.collection.data.length==0\" class=\"text-center no-collection-div\">\n            <i>Nenhum registro encontrado.</i>\n          </div>\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -514,11 +560,7 @@ var MedicamentoListComponent = (function () {
         window.scrollTo(0, 0);
     };
     MedicamentoListComponent.prototype.createItem = function () {
-        this.dataService.setView('create');
-    };
-    MedicamentoListComponent.prototype.setView = function (view) {
-        if (view === void 0) { view = 'list'; }
-        this.dataService.setView(view);
+        this.router.navigate(['/medicamentos/cadastrar']);
     };
     return MedicamentoListComponent;
 }());
@@ -603,95 +645,6 @@ MedicamentoSearchFilterService = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../src/app/units/medicamentos/medicamento-view-switch/medicamento-view-switch.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<preloader></preloader>\n<notification></notification>\n\n<div [ngSwitch]=\"view\">\n  <app-medicamento-list   *ngSwitchCase=\"'list'\"></app-medicamento-list>\n  <app-medicamento-edit   *ngSwitchCase=\"'edit'\"></app-medicamento-edit>\n  <app-medicamento-create *ngSwitchCase=\"'create'\"></app-medicamento-create>\n</div>\n"
-
-/***/ }),
-
-/***/ "../../../../../src/app/units/medicamentos/medicamento-view-switch/medicamento-view-switch.component.scss":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/units/medicamentos/medicamento-view-switch/medicamento-view-switch.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_services_data_data_service__ = __webpack_require__("../../../../../src/app/shared/services/data/data.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ngx_config_core__ = __webpack_require__("../../../../@ngx-config/core/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ng2_toastr__ = __webpack_require__("../../../../ng2-toastr/ng2-toastr.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ng2_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_ng2_toastr__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MedicamentoViewSwitchComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-var MedicamentoViewSwitchComponent = (function () {
-    function MedicamentoViewSwitchComponent(configService, dataService, vcr, toastr, route, router) {
-        this.configService = configService;
-        this.dataService = dataService;
-        this.vcr = vcr;
-        this.toastr = toastr;
-        this.route = route;
-        this.router = router;
-        this.toastr.setRootViewContainerRef(vcr);
-    }
-    MedicamentoViewSwitchComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.route.params.subscribe(function (params) {
-            _this.config = _this.dataService.config;
-            _this.view = _this.dataService.data.view;
-            _this.data = _this.dataService.data;
-            _this.config = _this.configService.getSettings();
-            _this.dataService.startApi('medicamentos');
-            _this.dataService.setSearchParams();
-            _this.dataService.getCollection();
-        });
-        window.scrollTo(0, 0);
-    };
-    return MedicamentoViewSwitchComponent;
-}());
-MedicamentoViewSwitchComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-        selector: 'app-medicamento-view-switch',
-        template: __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-view-switch/medicamento-view-switch.component.html"),
-        styles: [__webpack_require__("../../../../../src/app/units/medicamentos/medicamento-view-switch/medicamento-view-switch.component.scss")]
-    }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__ngx_config_core__["c" /* ConfigService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ngx_config_core__["c" /* ConfigService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__shared_services_data_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__shared_services_data_data_service__["a" /* DataService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3_ng2_toastr__["ToastsManager"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ng2_toastr__["ToastsManager"]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* ActivatedRoute */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* Router */]) === "function" && _f || Object])
-], MedicamentoViewSwitchComponent);
-
-var _a, _b, _c, _d, _e, _f;
-//# sourceMappingURL=medicamento-view-switch.component.js.map
-
-/***/ }),
-
 /***/ "../../../../../src/app/units/medicamentos/medicamentos-routing.module.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -700,6 +653,7 @@ var _a, _b, _c, _d, _e, _f;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__medicamento_edit_medicamento_edit_component__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-edit/medicamento-edit.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__medicamento_list_medicamento_list_component__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-list/medicamento-list.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__medicamento_create_medicamento_create_component__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-create/medicamento-create.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MedicamentosRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -711,16 +665,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var medicamentosRoutes = [
-    {
-        path: ':id',
-        pathMatch: 'prefix',
-        component: __WEBPACK_IMPORTED_MODULE_2__medicamento_edit_medicamento_edit_component__["a" /* MedicamentoEditComponent */]
-    },
     {
         path: '',
         pathMatch: 'full',
         component: __WEBPACK_IMPORTED_MODULE_3__medicamento_list_medicamento_list_component__["a" /* MedicamentoListComponent */],
+    },
+    {
+        path: 'cadastrar',
+        pathMatch: 'prefix',
+        component: __WEBPACK_IMPORTED_MODULE_4__medicamento_create_medicamento_create_component__["a" /* MedicamentoCreateComponent */]
+    },
+    {
+        path: ':id',
+        pathMatch: 'prefix',
+        component: __WEBPACK_IMPORTED_MODULE_2__medicamento_edit_medicamento_edit_component__["a" /* MedicamentoEditComponent */]
     },
 ];
 var MedicamentosRoutingModule = (function () {
@@ -755,7 +715,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__medicamento_list_medicamento_search_filter_service__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-list/medicamento-search-filter.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__medicamento_list_medicamento_list_table_medicamento_list_table_component__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-list/medicamento-list-table/medicamento-list-table.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__medicamento_create_medicamento_create_component__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-create/medicamento-create.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__medicamento_view_switch_medicamento_view_switch_component__ = __webpack_require__("../../../../../src/app/units/medicamentos/medicamento-view-switch/medicamento-view-switch.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MedicamentosModule", function() { return MedicamentosModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -774,7 +733,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
 var DECLARATIONS_MEDICAMENTOS = [
     __WEBPACK_IMPORTED_MODULE_5__medicamento_list_medicamento_list_component__["a" /* MedicamentoListComponent */],
     __WEBPACK_IMPORTED_MODULE_10__medicamento_create_medicamento_create_component__["a" /* MedicamentoCreateComponent */],
@@ -782,7 +740,6 @@ var DECLARATIONS_MEDICAMENTOS = [
     __WEBPACK_IMPORTED_MODULE_6__medicamento_form_medicamento_form_component__["a" /* MedicamentoFormComponent */],
     __WEBPACK_IMPORTED_MODULE_7__medicamento_history_medicamento_history_component__["a" /* MedicamentoHistoryComponent */],
     __WEBPACK_IMPORTED_MODULE_9__medicamento_list_medicamento_list_table_medicamento_list_table_component__["a" /* MedicamentoListTableComponent */],
-    __WEBPACK_IMPORTED_MODULE_11__medicamento_view_switch_medicamento_view_switch_component__["a" /* MedicamentoViewSwitchComponent */],
 ];
 var MedicamentosModule = (function () {
     function MedicamentosModule() {
