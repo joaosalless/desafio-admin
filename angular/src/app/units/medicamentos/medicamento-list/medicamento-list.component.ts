@@ -25,7 +25,6 @@ export class MedicamentoListComponent implements OnInit {
 
   ngOnInit() {
     this.data = this.dataService.data;
-    this.config = this.configService.getSettings();
     this.dataService.startApi('medicamentos');
     this.dataService.setPage(new Page({
       slug: 'medicamentos',
@@ -34,6 +33,7 @@ export class MedicamentoListComponent implements OnInit {
     this.dataService.setSearchParams();
     this.dataService.getCollection();
     window.scrollTo(0, 0);
+    this.dataService.debug();
   }
 
   createItem() {

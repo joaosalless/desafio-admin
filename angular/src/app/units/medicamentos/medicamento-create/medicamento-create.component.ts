@@ -14,16 +14,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class MedicamentoCreateComponent implements OnInit {
 
   /**
-   * Configurações globais
-   */
-  public config: any = {};
-
-  /**
-   * Dados globais
-   */
-  public data: any = {};
-
-  /**
    * Medicamento selecionado para edição
    */
   item: any;
@@ -49,7 +39,6 @@ export class MedicamentoCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.config = this.dataService.config;
     this.dataService.startApi('medicamentos');
     this.item = this.dataService.data.medicamentos.item;
     this.dataService.setPage(new Page({

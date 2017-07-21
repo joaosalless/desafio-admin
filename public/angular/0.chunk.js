@@ -73,18 +73,9 @@ var MedicamentoCreateComponent = (function () {
         this.preloaderService = preloaderService;
         this.route = route;
         this.router = router;
-        /**
-         * Configurações globais
-         */
-        this.config = {};
-        /**
-         * Dados globais
-         */
-        this.data = {};
         this.toastr.setRootViewContainerRef(vcr);
     }
     MedicamentoCreateComponent.prototype.ngOnInit = function () {
-        this.config = this.dataService.config;
         this.dataService.startApi('medicamentos');
         this.item = this.dataService.data.medicamentos.item;
         this.dataService.setPage(new __WEBPACK_IMPORTED_MODULE_1__domains_pages_page_model__["a" /* Page */]({
@@ -120,7 +111,7 @@ var _a, _b, _c, _d, _e, _f, _g;
 /***/ "../../../../../src/app/units/medicamentos/medicamento-edit/medicamento-edit.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<preloader></preloader>\n<notification></notification>\n\n<app-page-title></app-page-title>\n\n<div class=\"row\" *ngIf=\"!preloaderService.getPendingRequests()\">\n  <div class=\"col-sm-12\">\n    <div class=\"panel panel-default\">\n      <div class=\"panel-body border-bottom\">\n        <form #f=\"ngForm\" (ngChange)=\"onChange(f)\" (ngSubmit)=\"onSubmit(f)\" autocomplete=\"off\">\n          <div class=\"row\">\n            <div class=\"col-xs-12 col-lg-6\">\n              <h3 class=\"no-margin\">{{ dataService.getPage().title }}</h3>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <a [routerLink]=\"['/']\" class=\"btn btn-block btn-default\">\n                {{ 'ACTIONS.CANCEL' | translate }}\n              </a>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-primary\"\n                      [disabled]=\"!f.valid\"\n                      (click)=\"updateItem()\"\n                      *ngIf=\"!data.medicamentos.item.data.deleted_at\">\n                {{ 'ACTIONS.SAVE' | translate }}\n              </button>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-success\"\n                      *ngIf=\"data.medicamentos.item.data.deleted_at\"\n                      (click)=\"restoreItem()\">\n                {{ 'ACTIONS.RESTORE' | translate }}\n              </button>\n            </div>\n          </div>\n        </form>\n      </div>\n      <div class=\"panel-body border-top\">\n        <div class=\"tab-content\" *ngIf=\"!preloaderService.getPendingRequests()\">\n          <app-medicamento-form [item]=\"data.medicamentos.item.data\"></app-medicamento-form>\n        </div>\n      </div>\n      <div class=\"panel-body border-top\" *ngIf=\"data.medicamentos.item.data.history\">\n        <button class=\"btn btn-default\" (click)=\"dataService.toggleHistoryShowHistory()\"\n                *ngIf=\"!dataService.config.system.app.crud.showHistory\">\n            <span *ngIf=\"!dataService.getItemConfig().showHistory\">\n            {{ 'ACTIONS.SHOW_HISTORY' | translate }}\n            <span>\n              ({{ data.medicamentos.item.data.history.data.length }} alterações)\n            </span>\n            </span>\n          <span *ngIf=\"dataService.getItemConfig().showHistory\">\n              {{ 'ACTIONS.HIDE_HISTORY' | translate }}\n            </span>\n        </button>\n      </div>\n      <div class=\"panel-body border-top\" *ngIf=\"dataService.getItemConfig().showHistory\">\n        <h4 class=\"no-margin\">Histórico</h4>\n      </div>\n      <div class=\"panel-body no-padding-top\" *ngIf=\"dataService.getItemConfig().showHistory\">\n        <app-medicamento-history [item]=\"data.medicamentos.item.data\">\n        </app-medicamento-history>\n      </div>\n    </div>\n  </div>\n</div>\n\n<app-debug-data *ngIf=\"!preloaderService.getPendingRequests()\"></app-debug-data>\n\n"
+module.exports = "<preloader></preloader>\n<notification></notification>\n\n<app-page-title></app-page-title>\n\n<div class=\"row\" *ngIf=\"!preloaderService.getPendingRequests()\">\n  <div class=\"col-sm-12\">\n    <div class=\"panel panel-default\">\n      <div class=\"panel-body border-bottom\">\n        <form #f=\"ngForm\" (ngChange)=\"onChange(f)\" (ngSubmit)=\"onSubmit(f)\" autocomplete=\"off\">\n          <div class=\"row\">\n            <div class=\"col-xs-12 col-lg-6\">\n              <h3 class=\"no-margin\">{{ dataService.getPage().title }}</h3>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-default\"\n                      (click)=\"onCancel()\">\n                {{ 'ACTIONS.CANCEL' | translate }}\n              </button>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-primary\"\n                      [disabled]=\"!f.valid\"\n                      (click)=\"updateItem()\"\n                      *ngIf=\"!item.data.deleted_at\">\n                {{ 'ACTIONS.SAVE' | translate }}\n              </button>\n            </div>\n            <div class=\"col-xs-9 col-lg-3\" *ngIf=\"!preloaderService.getPendingRequests()\">\n              <button type=\"button\" class=\"btn btn-block btn-success\"\n                      *ngIf=\"item.data.deleted_at\"\n                      (click)=\"restoreItem()\">\n                {{ 'ACTIONS.RESTORE' | translate }}\n              </button>\n            </div>\n          </div>\n        </form>\n      </div>\n      <div class=\"panel-body border-top\">\n        <div class=\"tab-content\" *ngIf=\"!preloaderService.getPendingRequests()\">\n          <app-medicamento-form [item]=\"item.data\"></app-medicamento-form>\n        </div>\n      </div>\n      <div class=\"panel-body border-top\" *ngIf=\"item.data.history\">\n        <button class=\"btn btn-default\" (click)=\"dataService.toggleHistoryShowHistory()\"\n                *ngIf=\"!dataService.config.system.app.crud.showHistory\">\n            <span *ngIf=\"!dataService.getItemConfig().showHistory\">\n            {{ 'ACTIONS.SHOW_HISTORY' | translate }}\n            <span>\n              ({{ item.data.history.data.length }} alterações)\n            </span>\n            </span>\n          <span *ngIf=\"dataService.getItemConfig().showHistory\">\n              {{ 'ACTIONS.HIDE_HISTORY' | translate }}\n            </span>\n        </button>\n      </div>\n      <div class=\"panel-body border-top\" *ngIf=\"dataService.getItemConfig().showHistory\">\n        <h4 class=\"no-margin\">Histórico</h4>\n      </div>\n      <div class=\"panel-body no-padding-top\" *ngIf=\"dataService.getItemConfig().showHistory\">\n        <app-medicamento-history [item]=\"item.data\">\n        </app-medicamento-history>\n      </div>\n    </div>\n  </div>\n</div>\n\n<app-debug-data *ngIf=\"!preloaderService.getPendingRequests()\"></app-debug-data>\n\n"
 
 /***/ }),
 
@@ -190,24 +181,14 @@ var MedicamentoEditComponent = (function () {
         this.preloaderService = preloaderService;
         this.route = route;
         this.router = router;
-        /**
-         * Configurações globais
-         */
-        this.config = {};
-        /**
-         * Dados globais
-         */
-        this.data = {};
         this.toastr.setRootViewContainerRef(vcr);
     }
     MedicamentoEditComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.subscribe(function (params) {
-            _this.config = _this.dataService.config;
             _this.dataService.startApi('medicamentos');
-            _this.item = _this.dataService.data.medicamentos.item.data;
-            _this.data = _this.dataService.data;
             _this.dataService.getItem(params.id);
+            _this.item = _this.dataService.data.medicamentos.item;
             _this.dataService.setPage(new __WEBPACK_IMPORTED_MODULE_3__domains_pages_page_model__["a" /* Page */]({
                 slug: 'medicamentos-edit',
                 title: 'Editando Apresentações Alopáticos',
@@ -219,10 +200,8 @@ var MedicamentoEditComponent = (function () {
     /**
      * Cancela a edição e retorna para a coleção de itens
      */
-    MedicamentoEditComponent.prototype.onCancel = function (vent) {
-        event.preventDefault();
+    MedicamentoEditComponent.prototype.onCancel = function () {
         this.router.navigate(['/', 'medicamentos']);
-        this.dataService.setView('list');
     };
     /**
      * Atualiza o item na API
@@ -235,8 +214,7 @@ var MedicamentoEditComponent = (function () {
      * Restaura o item excluido
      */
     MedicamentoEditComponent.prototype.restoreItem = function () {
-        this.dataService.restoreItem(this.data.medicamentos.item.data.id);
-        this.router.navigate(['/medicamentos']);
+        this.dataService.restoreItem(this.item.data.id);
     };
     return MedicamentoEditComponent;
 }());
@@ -457,7 +435,6 @@ var MedicamentoListTableComponent = (function () {
     MedicamentoListTableComponent.prototype.editItem = function (id) {
         this.dataService.getItem(id);
         this.router.navigate(['/medicamentos', id]);
-        this.dataService.setView('edit');
     };
     MedicamentoListTableComponent.prototype.removeItem = function (id) {
         this.dataService.removeItem(id);
@@ -467,6 +444,7 @@ var MedicamentoListTableComponent = (function () {
     };
     MedicamentoListTableComponent.prototype.restoreItem = function (id) {
         this.dataService.restoreItem(id);
+        this.router.navigate(['/medicamentos', id]);
     };
     return MedicamentoListTableComponent;
 }());
@@ -549,7 +527,6 @@ var MedicamentoListComponent = (function () {
     }
     MedicamentoListComponent.prototype.ngOnInit = function () {
         this.data = this.dataService.data;
-        this.config = this.configService.getSettings();
         this.dataService.startApi('medicamentos');
         this.dataService.setPage(new __WEBPACK_IMPORTED_MODULE_5__domains_pages_page_model__["a" /* Page */]({
             slug: 'medicamentos',
@@ -558,6 +535,7 @@ var MedicamentoListComponent = (function () {
         this.dataService.setSearchParams();
         this.dataService.getCollection();
         window.scrollTo(0, 0);
+        this.dataService.debug();
     };
     MedicamentoListComponent.prototype.createItem = function () {
         this.router.navigate(['/medicamentos/cadastrar']);

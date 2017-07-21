@@ -28,8 +28,7 @@ export class MedicamentoListTableComponent implements OnInit {
 
   editItem(id) {
     this.dataService.getItem(id);
-    this.router.navigate(['/medicamentos', id])
-    this.dataService.setView('edit');
+    this.router.navigate(['/medicamentos', id]);
   }
 
   removeItem(id: any) {
@@ -42,6 +41,7 @@ export class MedicamentoListTableComponent implements OnInit {
 
   restoreItem(id: any) {
     this.dataService.restoreItem(id);
+    this.router.navigate(['/medicamentos', id]);
   }
 
 }

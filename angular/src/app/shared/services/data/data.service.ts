@@ -197,16 +197,6 @@ export class DataService {
   }
 
   /**
-   * Muda a View atual
-   *
-   * @param view
-   * @return {DataService}
-   */
-  setView(view: any) {
-    this.data.view = view;
-  }
-
-  /**
    * Debuga a propriedade data no console
    */
   debug() {
@@ -473,9 +463,8 @@ export class DataService {
       .init(this.getCollectionQueryBuilder())
       .list(this.data.searchParams)
       .then((res) => {
+        this.resetDataCollection();
         this.setDataCollectionResponse(res);
-
-        this.debug();
       })
       .catch((error) => {
         this.logger.error(error)
@@ -495,8 +484,8 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .show(id)
       .then((res) => {
-        this.resetDataItem()
-          .setDataItemApiResponse(res);
+        this.resetDataItem();
+        this.setDataItemApiResponse(res);
       })
       .catch((error) => {
         this.logger.error(error)
@@ -517,9 +506,8 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .post(item)
       .then((res) => {
-        this.setDataItemApiResponse(res)
-          .notifyFromApiResponse(res)
-          .checkAndChangeView('create');
+        this.setDataItemApiResponse(res);
+        this.notifyFromApiResponse(res);
       })
       .catch((error) => {
         this.logger.error(error)
@@ -543,7 +531,6 @@ export class DataService {
       .then((res) => {
         this.getItem(item.id);
         this.setDataItemApiResponse(res);
-        this.setView('list');
         this.getCollection();
         this.notifyFromApiResponse(res);
       })
@@ -563,12 +550,10 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .remove(id)
       .then((res) => {
-        this.resetDataItem()
-          .toggleTrashedByCollectionDataLength()
-          .getCollection()
-          .setDataCollectionResponse(res)
-          .notifyFromApiResponse(res)
-          .checkAndChangeView('delete');
+        this.resetDataItem();
+        this.toggleTrashedByCollectionDataLength();
+        this.getCollection();
+        this.notifyFromApiResponse(res);
       })
       .catch((error) => {
         this.logger.error(error)
@@ -586,12 +571,9 @@ export class DataService {
       .init(this.getItemQueryBuilder())
       .restore(id)
       .then((res) => {
-        this.resetDataItem();
-        this.setDataItemApiResponse(res);
+        this.getItem(id);
         this.toggleTrashedByCollectionDataLength();
         this.getCollection();
-        this.checkAndChangeView('restore');
-        this.setDataCollectionResponse(res);
         this.notifyFromApiResponse(res);
       })
       .catch((error) => {
@@ -613,8 +595,7 @@ export class DataService {
         this.toggleTrashedByCollectionDataLength()
           .getCollection()
           .setDataItemApiResponse(res)
-          .notifyFromApiResponse(res)
-          .checkAndChangeView('force_delete');
+          .notifyFromApiResponse(res);
       })
       .catch((error) => {
         this.logger.error(error)
@@ -646,7 +627,7 @@ export class DataService {
   }
 
   /**
-   * Atualiza this.data.{endpoint}.item a partir da resposta da API
+   * Exibe notificações a partir da resposta da API
    *
    * @param res
    */
@@ -660,14 +641,4 @@ export class DataService {
     return this;
   }
 
-  /**
-   * Verifica se será mudada e muda a view após operações crud
-   */
-  checkAndChangeView(operation: any, res?: ApiResponseInterface) {
-    let view = this.config.system.app.crud.switchViewOnAction[operation];
-    if (view) {
-      this.setView(view);
-    }
-    return this;
-  }
 }

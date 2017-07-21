@@ -16,16 +16,6 @@ import { ToastsManager } from 'ng2-toastr';
 export class MedicamentoEditComponent implements OnInit {
 
   /**
-   * Configurações globais
-   */
-  public config: any = {};
-
-  /**
-   * Dados globais
-   */
-  public data: any = {};
-
-  /**
    * Medicamento selecionado para edição
    */
   item: any;
@@ -52,11 +42,9 @@ export class MedicamentoEditComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: any) => {
-      this.config = this.dataService.config;
       this.dataService.startApi('medicamentos');
-      this.item = this.dataService.data.medicamentos.item.data;
-      this.data = this.dataService.data;
       this.dataService.getItem(params.id);
+      this.item = this.dataService.data.medicamentos.item;
       this.dataService.setPage(new Page({
         slug: 'medicamentos-edit',
         title: 'Editando Apresentações Alopáticos',
@@ -69,10 +57,8 @@ export class MedicamentoEditComponent implements OnInit {
   /**
    * Cancela a edição e retorna para a coleção de itens
    */
-  onCancel(vent) {
-    event.preventDefault();
+  onCancel() {
     this.router.navigate(['/', 'medicamentos']);
-    this.dataService.setView('list');
   }
 
   /**
@@ -87,8 +73,7 @@ export class MedicamentoEditComponent implements OnInit {
    * Restaura o item excluido
    */
   restoreItem() {
-    this.dataService.restoreItem(this.data.medicamentos.item.data.id);
-    this.router.navigate(['/medicamentos']);
+    this.dataService.restoreItem(this.item.data.id);
   }
 
 }
