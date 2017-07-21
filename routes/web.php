@@ -15,6 +15,8 @@ $spaRoutes = [
     '/',
     '/medicamentos',
     '/medicamentos/{id}',
+    '/medicamentos/{id}/editar',
+    '/medicamentos/cadastrar',
 ];
 
 foreach ($spaRoutes as $route) {

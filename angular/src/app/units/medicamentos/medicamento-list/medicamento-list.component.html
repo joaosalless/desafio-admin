@@ -23,7 +23,7 @@
         <div class="col-xs-3 col-lg-2 no-padding">
 
           <button class="btn btn-primary btn-block pull-right"
-                  (click)="none">Cadastrar</button>
+                  (click)="createItem()">Cadastrar</button>
         </div>
       </div>
       <div class="panel-body border-bottom">
@@ -53,24 +53,19 @@
         </ul>
       </div>
 
-      <div [ngSwitch]="dataService.data.view">
-        <div class="panel-body" *ngSwitchCase="'create'">
-          <app-medicamento-create></app-medicamento-create>
-        </div>
-        <div class="panel-body" *ngSwitchDefault>
-          <div class="tab-content">
-            <app-medicamento-list-table [collection]="data.medicamentos.collection"
-                                        *ngIf="data.medicamentos.collection.meta?.pagination.total > 0">
-            </app-medicamento-list-table>
-            <app-pagination class="text-center"
-                            *ngIf="data.medicamentos.collection.length>0"
-                            [totalRegistros]="totalRegistros"
-                            [qtdPorPagina]="qtdPorPagina"
-                            (onPaginate)="paginar($event)"></app-pagination>
+      <div class="panel-body">
+        <div class="tab-content">
+          <app-medicamento-list-table [collection]="data.medicamentos.collection"
+                                      *ngIf="data.medicamentos.collection.meta?.pagination.total > 0">
+          </app-medicamento-list-table>
+          <app-pagination class="text-center"
+                          *ngIf="data.medicamentos.collection.length>0"
+                          [totalRegistros]="totalRegistros"
+                          [qtdPorPagina]="qtdPorPagina"
+                          (onPaginate)="paginar($event)"></app-pagination>
 
-            <div *ngIf="data.medicamentos.collection.data.length==0" class="text-center no-collection-div">
-              <i>Nenhum registro encontrado.</i>
-            </div>
+          <div *ngIf="data.medicamentos.collection.data.length==0" class="text-center no-collection-div">
+            <i>Nenhum registro encontrado.</i>
           </div>
         </div>
       </div>

@@ -1,4 +1,69 @@
 <preloader></preloader>
 <notification></notification>
 
-<h1>Não implementado ainda.</h1>
+<app-page-title></app-page-title>
+
+<div class="row" *ngIf="!preloaderService.getPendingRequests()">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-body border-bottom">
+        <form #f="ngForm" (ngChange)="onChange(f)" (ngSubmit)="onSubmit(f)" autocomplete="off">
+          <div class="row">
+            <div class="col-xs-12 col-lg-6">
+              <h3 class="no-margin">{{ dataService.getPage().title }}</h3>
+            </div>
+            <div class="col-xs-9 col-lg-3" *ngIf="!preloaderService.getPendingRequests()">
+              <a [routerLink]="['/']" class="btn btn-block btn-default">
+                {{ 'ACTIONS.CANCEL' | translate }}
+              </a>
+            </div>
+            <div class="col-xs-9 col-lg-3" *ngIf="!preloaderService.getPendingRequests()">
+              <button type="button" class="btn btn-block btn-primary"
+                      [disabled]="!f.valid"
+                      (click)="saveItem()"
+                      *ngIf="!item.data.deleted_at">
+                {{ 'ACTIONS.SAVE' | translate }}
+              </button>
+            </div>
+            <div class="col-xs-9 col-lg-3" *ngIf="!preloaderService.getPendingRequests()">
+              <button type="button" class="btn btn-block btn-success"
+                      *ngIf="item.data.deleted_at"
+                      (click)="restoreItem()">
+                {{ 'ACTIONS.RESTORE' | translate }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="panel-body border-top">
+        <div class="tab-content" *ngIf="!preloaderService.getPendingRequests()">
+          <app-medicamento-form [item]="item.data"></app-medicamento-form>
+        </div>
+      </div>
+      <div class="panel-body border-top" *ngIf="item.data.history">
+        <button class="btn btn-default" (click)="dataService.toggleHistoryShowHistory()"
+                *ngIf="!dataService.config.system.app.crud.showHistory">
+            <span *ngIf="!dataService.getItemConfig().showHistory">
+            {{ 'ACTIONS.SHOW_HISTORY' | translate }}
+            <span>
+              ({{ item.data.history.data.length }} alterações)
+            </span>
+            </span>
+          <span *ngIf="dataService.getItemConfig().showHistory">
+              {{ 'ACTIONS.HIDE_HISTORY' | translate }}
+            </span>
+        </button>
+      </div>
+      <div class="panel-body border-top" *ngIf="dataService.getItemConfig().showHistory">
+        <h4 class="no-margin">Histórico</h4>
+      </div>
+      <div class="panel-body no-padding-top" *ngIf="dataService.getItemConfig().showHistory">
+        <app-medicamento-history [item]="item.data">
+        </app-medicamento-history>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-debug-data *ngIf="!preloaderService.getPendingRequests()"></app-debug-data>
+

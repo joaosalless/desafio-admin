@@ -10,7 +10,6 @@ import { MedicamentoHistoryComponent } from './medicamento-history/medicamento-h
 import { MedicamentoSearchFilterService } from './medicamento-list/medicamento-search-filter.service';
 import { MedicamentoListTableComponent } from './medicamento-list/medicamento-list-table/medicamento-list-table.component';
 import { MedicamentoCreateComponent } from './medicamento-create/medicamento-create.component';
-import { MedicamentoViewSwitchComponent } from './medicamento-view-switch/medicamento-view-switch.component';
 
 const DECLARATIONS_MEDICAMENTOS = [
   MedicamentoListComponent,
@@ -19,7 +18,6 @@ const DECLARATIONS_MEDICAMENTOS = [
   MedicamentoFormComponent,
   MedicamentoHistoryComponent,
   MedicamentoListTableComponent,
-  MedicamentoViewSwitchComponent,
 ];
 
 @NgModule({

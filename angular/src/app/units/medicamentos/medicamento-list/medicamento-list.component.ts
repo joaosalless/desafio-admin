@@ -37,11 +37,7 @@ export class MedicamentoListComponent implements OnInit {
   }
 
   createItem() {
-    this.dataService.setView('create');
-  }
-
-  setView(view = 'list') {
-    this.dataService.setView(view);
+    this.router.navigate(['/medicamentos/cadastrar']);
   }
 
 }
